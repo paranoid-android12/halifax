@@ -1,3 +1,79 @@
-<div class="w-[100px] h-[100px] bg-red-200">
-   <p>We're no strangers to love :3</p>
+<div class=" actual-background bg-custom-dark flex flex-col md:flex-row w-full h-screen">
+    <div class="flex div1 md:min-w-[60%] h-2/5 md:h-full justify-center items-center ">
+        <div class="flex flex-col justify-center  h-full">
+            <h1 class="text-2xl md:text-3xl lg:text-8xl font-black">Halifax</h1>
+            <h3 class="text-large md:text-medium lg:text-6xl font-black font-normal" style="color:#9E9E9E">Everything, In One Place.</h3>
+        </div>
+    </div>
+
+    <div class="flex flex-col justify-center div2 w-full md:min-w-[40%] h-3/5 md:h-screen md:bg-custom-dark bg-white "> 
+        <div class="pt-10 md:bg-white lg:pt-20 lg:w-[600px] lg:h-[600px] xl:w-[800px] xl:h-[800px] rounded-lg">
+            <div *ngIf="!signIn; else signUp" >
+                <h2 class="lg:text-4xl text-large font-bold pl-3 lg:pl-5">Create an Account</h2>
+                <h5 class="lg:text-lg text-xs lg:pt-5 pl-3 pl-10">Sign Up With Email</h5>
+                <h5 class="lg:text-lg text-xs pl-3 pl-10">
+                    Already Have An Account? 
+                    <a href="#" (click)="activateSignIn()" class="text-blue-500 hover:text-blue-700">Sign-In</a>
+                </h5>
+            </div>
+            <ng-template #signUp>
+                <div>
+                    <h2 class="lg:text-4xl text-large font-bold pl-3 lg:pl-5">Welcome Back!</h2>
+                    <h5 class="lg:text-lg text-xs lg:pt-5 pl-3 pl-10">Sign In with Email</h5>
+                    <h5 class="lg:text-lg text-xs pl-3 pl-10">
+                        Don't Have An Account? 
+                        <a href="#" (click)="deactivateSignIn()" class="text-blue-500 hover:text-blue-700">Sign-Up for An Account</a>
+                    </h5>
+                </div>
+            </ng-template>
+            <div class="flex justify-center items-center ">
+                <form method="POST" [formGroup]="form" (ngSubmit)="onLogin()">
+                    <div class="pt-10">
+                        <div class="flex flex-row">
+
+                            <input placeholder="Enter Username" type="text" id="username" formControlName="username" (keydown.enter)="$event.stopPropagation(); $event.preventDefault()">
+                        </div>
+
+                        <!-- <div class="pt-3 flex flex-row">
+                            <img class="lg:pr-3" src="/icons/pass.svg" alt="password" >
+                            <input [type]="hide ? 'password' : 'text'" matInput formControlName="password" (keydown.enter)="onLogin(); $event.stopPropagation(); $event.preventDefault()">
+                            <button class="mr-3" matSuffix (click)="hide = !hide" [attr.aria-label]="'Toggle password visibility'" [attr.aria-pressed]="hide">
+                            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                            </button>
+                        </div> --> 
+
+                        <div class="pt-3 flex flex-row relative">
+                            <input placeholder="Enter Password"  [type]="hide ? 'password' : 'text'" matInput formControlName="password" class="pl-10" (keydown.enter)="onLogin(); $event.stopPropagation(); $event.preventDefault()">
+                            <button type="button" class="absolute right-0 mr-4 mb-0 mt-2" matSuffix (click)="toggleVisibility($event)" style="top: 50%; transform: translateY(-50%);">
+                                <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                            </button>
+                        </div>
+
+
+                        <div *ngIf="this.errorMessage" class="text-red-500 text-xs pt-3">
+                            {{ this.errorMessage }}
+                        </div>
+
+
+                        <div class="flex justify-end pt-3 pb-3 font-DMSans ">
+                            <button type="submit" style="padding: 10px; background-color: #6437A0; color: white; border-radius: 15px;" [disabled]="!form.valid">
+                                <div *ngIf="isLoading; else loginText" class="flex justify-center items-center w-full">
+                                    <mat-spinner [diameter]="30"></mat-spinner>
+                                </div>
+                                <ng-template #loginText>Continue</ng-template>
+                            </button>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div>
+                <h2 class="lg:text-xl font-bold text-center">Or</h2>
+                <div class="flex justify-center items-center h-full pt-10">
+                    <div id="google-btn">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

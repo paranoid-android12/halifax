@@ -8,8 +8,10 @@ module.exports = {
       fontFamily: {
         Sofia: ["Sofia Sans"], 
       },
+      colors: {
+        'custom-dark': '#1e1e1e',
+      },
     },
   },
   plugins: [],
 }
-

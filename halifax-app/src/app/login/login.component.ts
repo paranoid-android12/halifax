@@ -1,5 +1,6 @@
+declare var google:any;
 import { Component } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Subscription, throttleTime } from 'rxjs';
 import { AuthService } from '../services/authentication/auth.service';
 import { LoginService } from '../services/authentication/login.service';
 import { Title } from '@angular/platform-browser';
@@ -11,11 +12,12 @@ import { CommonModule } from '@angular/common';
 import {MatIconModule} from '@angular/material/icon';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, MatIconModule, ReactiveFormsModule],
+  imports: [CommonModule, MatIconModule, ReactiveFormsModule, MatProgressSpinnerModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
@@ -28,6 +30,9 @@ export class LoginComponent {
   form: FormGroup;
   private subscriptions = new Subscription();
 
+
+  signIn: boolean = false;
+
   constructor(private authService: AuthService, private loginService: LoginService, private titleService: Title, private formBuilder: FormBuilder, private routers: Router, private dataService: DataService) {
     this.form = new FormGroup({
       username: new FormControl('', [Validators.required]),
@@ -36,6 +41,27 @@ export class LoginComponent {
   }
 
   ngOnInit(): void {
+    google.accounts.id.initialize({
+      client_id: '29716397471-rli2g9ckpmqqg94h4vniv7jrd7akos34.apps.googleusercontent.com',
+      callback: (response: any) => {
+        console.log('Google account response:', response);
+        console.log('Google account credential: ', response.credential);
+        this.setTokenInCookie(response.credential);
+        this.loginService.LoggedIn();
+        this.navigateBasedOnRole();
+      }
+    });
+
+    google.accounts.id.renderButton(document.getElementById('google-btn'), {
+      theme: 'outline',
+      size: 'large',
+      text: 'continue_with',
+      shape: 'rectangular',
+      width: '340',
+      height: '90',
+    });
+
+
     // to dynamically remove the error messag ewhen the user types in something new
     this.titleService.setTitle('Login - 888 HARDWARE TRADING');
     const usernameSubscription = this.form.get('username')!.valueChanges.subscribe(() => {
@@ -46,6 +72,14 @@ export class LoginComponent {
     });
     this.subscriptions.add(usernameSubscription);
     this.subscriptions.add(passwordSubscription);
+  }
+
+  activateSignIn() {
+    this.signIn = true;
+  }
+
+  deactivateSignIn() {  
+    this.signIn = false;
   }
 
   toggleVisibility(event: MouseEvent): void {
@@ -60,7 +94,9 @@ export class LoginComponent {
   }
 
   navigateBasedOnRole() {
+    console.log("navigate to user page");
     // let role = this.authService.getRole();
+    this.routers.navigate(['/browse']);
     // if (role === 'admin'){
     //   this.routers.navigate(['/admin/dashboard']);
     // } else {
@@ -70,28 +106,32 @@ export class LoginComponent {
   }
 
   onLogin() {
-    // this.isLoading = true;
-    // this.dataService.login(this.form, 'login').subscribe({
-    //   next: (res: any) => {
-    //     if(res.code !== 403){
-    //       this.isLoading = false;
-    //       this.setTokenInCookie(res.token);
-    //       this.navigateBasedOnRole();  
-    //       this.loginService.LoggedIn();
-    //       //this.openDialog("Email or password is incorrect. Please try again.");
-    //     }
-    //     else {
-    //       this.errorMessage = "Email or password is incorrect. Please try again.";
-    //     }
+    let endpoint = 'register';
 
-    //   },
-    //   error: (err) => {
-    //     // // console.log('Login not successful:', err.message);
-    //     this.errorMessage = "Error Logging in. Please try again.";
+    if(this.signIn) {
+      endpoint = 'login';
+    }
+
+    this.isLoading = true;
+    this.dataService.login(this.form, endpoint).subscribe({
+      next: (res: any) => {
+        if(res.code !== 403){
+          this.isLoading = false;
+          this.setTokenInCookie(res.token);
+          this.navigateBasedOnRole();  
+          this.loginService.LoggedIn();
+        }
+        else {
+          this.errorMessage = "Email or password is incorrect. Please try again.";
+        }
+
+      },
+      error: (err) => {
+        this.errorMessage = "Error Logging in. Please try again.";
   
-    //   }
-    // });
-    // this.isLoading = false;
+      }
+    });
+    this.isLoading = false;
   }
 
   ngOnDestroy(): void {
