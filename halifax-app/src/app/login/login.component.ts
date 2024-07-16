@@ -16,7 +16,6 @@ import { ReactiveFormsModule } from '@angular/forms';
   selector: 'app-login',
   standalone: true,
   imports: [CommonModule, MatIconModule, ReactiveFormsModule],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
