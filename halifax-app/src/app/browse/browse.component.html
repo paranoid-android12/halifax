@@ -3,7 +3,19 @@
         <p class="font-Sofia font-[1000] text-[1.4rem]">Halifax</p>
     </div>
 
-    <div class="bg-red-200 p-10">
+    <div class="p-10 grid">
         <p class="font-Sofia font-[1000] text-[2.2rem]">Browse Products</p>
+        <div
+        class="mobileS:columns-1 tablet:columns-2 laptop:columns-3 desktop:columns-6 gap-3 w-full"
+        >
+            <div
+                *ngFor="let prod of product"
+                class="flex flex-col h-[290px] mb-5 relative rounded-[5px] bg-white overflow-hidden border-2 duration-300 hover:duration-300 hover:shadow-main"
+            >
+                <img [src]="prod.product_image" class="h-[180px] object-cover">
+                <p class="text-[1rem] px-3 pt-2 flex-1">{{ truncateName(prod.product_name) }}</p>
+                <p class="text-[1.2rem] px-3 py-2 text-[#6437A0]">₱{{ prod.product_price }}</p>
+            </div>
+        </div>
     </div>
 </div>

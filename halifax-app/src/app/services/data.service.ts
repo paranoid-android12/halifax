@@ -16,6 +16,6 @@ export class DataService {
   }
 
   fetchData(endpoint: string) {
-    return this.http.get(mainPort + '/halifax/api-halifax/' + endpoint);
+    return this.http.get(mainPort + '/halifax/api-halifax/main/' + endpoint);
   }
 }
