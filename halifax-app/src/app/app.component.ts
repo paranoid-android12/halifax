@@ -11,3 +11,4 @@ import { RouterOutlet } from '@angular/router';
 export class AppComponent {
   title = 'halifax-app';
 }
+export const mainPort = "http://localhost/Halifax-app";
