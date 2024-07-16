@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { DataService } from '../services/data.service';
 import { CommonModule } from '@angular/common';
 import { Product } from '../services/product';
+import { BrowseDialogComponent } from './browse-dialog/browse-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-browse',
@@ -14,7 +16,8 @@ export class BrowseComponent {
   product: Product[] = []
 
   constructor(
-    private dataService: DataService
+    private dataService: DataService,
+    private dialog: MatDialog
   ){
     this.dataService.fetchData("getProduct").subscribe({
       next: (next: any) => {this.product = next;},
@@ -28,5 +31,13 @@ export class BrowseComponent {
       return name.substring(0, 35) + '...';
     }
     return name;
+  }
+
+  openDialog(product: Product){
+    this.dialog.open(BrowseDialogComponent, {
+      data: {
+        product: product
+      }
+    })
   }
 }

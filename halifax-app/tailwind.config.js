@@ -7,6 +7,7 @@ module.exports = {
     extend: {
       fontFamily: {
         Sofia: ["Sofia Sans"], 
+        Roboto: ["Roboto"]
       },
       colors: {
         'custom-dark': '#1e1e1e',

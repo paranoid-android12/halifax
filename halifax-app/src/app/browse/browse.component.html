@@ -6,10 +6,11 @@
     <div class="p-10 grid">
         <p class="font-Sofia font-[1000] text-[2.2rem]">Browse Products</p>
         <div
-        class="mobileS:columns-1 tablet:columns-2 laptop:columns-3 desktop:columns-6 gap-3 w-full"
+        class="mobileS:grid-cols-6 tablet:grid-cols-6 laptop:grid-cols-6 desktop:grid-cols-7 grid gap-3 w-full"
         >
             <div
                 *ngFor="let prod of product"
+                (click)="openDialog(prod)"
                 class="flex flex-col h-[290px] mb-5 relative rounded-[5px] bg-white overflow-hidden border-2 duration-300 hover:duration-300 hover:shadow-main"
             >
                 <img [src]="prod.product_image" class="h-[180px] object-cover">

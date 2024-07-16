@@ -43,20 +43,19 @@ switch ($_SERVER['REQUEST_METHOD']) {
 
     case 'POST':
         $data = json_decode(file_get_contents("php://input"));
-        // switch ($request[0]) {
-        //     case 'login':
-        //         echo json_encode($tunnel->toLogin($data));
-        //         break;
+        switch ($request[0]) {
+            case 'login':
+                echo json_encode($tunnel->toLogin($data));
+                break;
 
-        //     case 'addProduct':
-        //         $ver = $globalOb->verifyToken();
-        //         echo json_encode($tunnel->toAddProduct($data));
-        //         break;
+            case 'addCart':
+                echo json_encode($tunnel->toAddCart($data));
+                break;
 
-        //     default:
-        //         http_response_code(403);
-        //         break;
-        // }
+            default:
+                http_response_code(403);
+                break;
+        }
         break;
     default:
         http_response_code(404);
