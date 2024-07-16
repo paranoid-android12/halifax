@@ -53,10 +53,10 @@ export class LoginComponent {
     google.accounts.id.renderButton(document.getElementById('google-btn'), {
       theme: 'outline',
       size: 'large',
-      text: 'continue_with',
+      text: 'Continue with Google',
       shape: 'rectangular',
-      width: '340',
-      height: '90',
+      width: '500',
+      height: '100',
     });
 
 

@@ -10,41 +10,47 @@
     </div>
 
     <div class="flex flex-col justify-center div2 w-full md:min-w-[40%] h-3/5 md:h-screen md:bg-custom-dark bg-white "> 
-        <div class="pt-10 md:bg-white lg:pt-20 lg:w-[600px] lg:h-[600px] xl:w-[800px] xl:h-[800px] rounded-lg">
+        <div class="pt-5 md:bg-white lg:pt-10 lg:w-[600px] lg:h-[600px] xl:w-[800px] xl:h-[800px] rounded-lg">
 
             <div class="container p-4">
-                <h2 class="text-4xl font-bold lg:mb-6">{{ isSignInActive ? 'Welcome Back!' : 'Create an Account' }}</h2>
+                <h2 class="text-4xl font-bold font-Sofia md:mb-5">{{ isSignInActive ? 'Welcome Back' : 'Create an Account' }}</h2>
                               
-                <a (click)="toggleForm()" class="inline-block align-baseline font-bold text-sm text-indigo-600 hover:text-indigo-800">
+                <a (click)="toggleForm()" class="inline-block align-baseline Sofia font-bold text-sm hover:text-indigo-800 mb-1 md:mb-4">
                     {{ isSignInActive ? 'Don’t have an account? Sign up' : 'Already have an account? Sign in' }}
                 </a>
 
                 <form [formGroup]="form" (ngSubmit)="onLogin()">
-                  <div *ngIf="!isSignInActive" class="mb-4">
-                    <label for="username" class="block text-sm font-medium text-gray-700">Username:</label>
-                    <input type="text" id="username" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                  </div>
-              
-                  <div class="mb-4">
-                    <label for="email" class="block text-sm font-medium text-gray-700">Email:</label>
-                    <input type="email" id="email"  class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" >
-                  </div>
-              
-                  <div class="mb-6">
-                    <label for="password" class="block text-sm font-medium text-gray-700">Password:</label>
-                    <input type="password" id="password" class="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-                  </div>
-
-                  <button type="submit" style="background-color: #6437A0;"  class="rounded-lg flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">{{ isSignInActive ? 'Sign In' : 'Sign Up' }}</button>
+                    <div *ngIf="!isSignInActive" class="mb-4">
+                      <label for="username" class="block text-sm font-medium text-gray-700">Username:</label>
+                      <input type="text" id="username" class="mt-1 block w-full px-3 py-2 bg-white border-b border-gray-300 focus:border-indigo-500 focus:ring-0">
+                    </div>
+                  
+                    <div class="mb-4">
+                      <label for="email" class="block text-sm font-medium text-gray-700">Email:</label>
+                      <input type="email" id="email" class="mt-1 block w-full px-3 py-2 bg-white border-b border-gray-300 focus:border-indigo-500 focus:ring-0">
+                    </div>
+                  
+                    <div class="mb-6">
+                      <label for="password" class="block text-sm font-medium text-gray-700">Password:</label>
+                      <input type="password" id="password" class="mt-1 block w-full px-3 py-2 bg-white border-b border-gray-300 focus:border-indigo-500 focus:ring-0">
+                    </div>
+                  
+                    <button type="submit" style="background-color: #6437A0;" class="rounded-lg flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">{{ isSignInActive ? 'Sign In' : 'Sign Up' }}</button>
                 </form>
 
-                <div>
-                    <h2 class="lg:text-xl font-bold text-center">Or</h2>
-                    <div>
-                        <div id="google-btn"></div>
+                <div class="flex items-center justify-center md:mt-5">
+                    <div class="flex-grow">
+                      <hr class="border">
                     </div>
+                    <h2 class="lg:text-xl font-bold text-center px-3 mb-2">Or</h2>
+                    <div class="flex-grow">
+                      <hr class="border">
+                    </div>
+                  </div>
+                  <div class="flex justify-center items-center lg:mt-5">
+                    <div id="google-btn"></div>
+                  </div>
                 </div>
-              </div>
 
             <!-- <div>
                 <h2 class="lg:text-4xl text-large font-bold pl-3 lg:pl-5">Create an Account</h2>
