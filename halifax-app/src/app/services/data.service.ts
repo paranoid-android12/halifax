@@ -14,4 +14,8 @@ export class DataService {
     console.log("got it")
     //return this.http.post(mainPort + '/API-hardware-trading/' + endpoint, data.getRawValue());
   }
+
+  fetchData(endpoint: string) {
+    return this.http.get(mainPort + '/halifax/api-halifax/' + endpoint);
+  }
 }
