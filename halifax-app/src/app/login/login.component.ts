@@ -29,9 +29,7 @@ export class LoginComponent {
   isLoading = false;
   form: FormGroup;
   private subscriptions = new Subscription();
-
-
-  signIn: boolean = false;
+  isSignInActive: boolean = true;
 
   constructor(private authService: AuthService, private loginService: LoginService, private titleService: Title, private formBuilder: FormBuilder, private routers: Router, private dataService: DataService) {
     this.form = new FormGroup({
@@ -74,13 +72,11 @@ export class LoginComponent {
     this.subscriptions.add(passwordSubscription);
   }
 
-  activateSignIn() {
-    this.signIn = true;
+
+  toggleForm() {
+    this.isSignInActive = !this.isSignInActive;
   }
 
-  deactivateSignIn() {  
-    this.signIn = false;
-  }
 
   toggleVisibility(event: MouseEvent): void {
     event.stopPropagation();
@@ -107,30 +103,31 @@ export class LoginComponent {
 
   onLogin() {
     let endpoint = 'register';
-
-    if(this.signIn) {
+    if(this.isSignInActive) {
       endpoint = 'login';
     }
 
-    this.isLoading = true;
-    this.dataService.login(this.form, endpoint).subscribe({
-      next: (res: any) => {
-        if(res.code !== 403){
-          this.isLoading = false;
-          this.setTokenInCookie(res.token);
-          this.navigateBasedOnRole();  
-          this.loginService.LoggedIn();
-        }
-        else {
-          this.errorMessage = "Email or password is incorrect. Please try again.";
-        }
+    console.log("this was the endpoint", endpoint);
 
-      },
-      error: (err) => {
-        this.errorMessage = "Error Logging in. Please try again.";
+    this.isLoading = true;
+    // this.dataService.login(this.form, endpoint).subscribe({
+    //   next: (res: any) => {
+    //     if(res.code !== 403){
+    //       this.isLoading = false;
+    //       this.setTokenInCookie(res.token);
+    //       this.navigateBasedOnRole();  
+    //       this.loginService.LoggedIn();
+    //     }
+    //     else {
+    //       this.errorMessage = "Email or password is incorrect. Please try again.";
+    //     }
+
+    //   },
+    //   error: (err) => {
+    //     this.errorMessage = "Error Logging in. Please try again.";
   
-      }
-    });
+    //   }
+    // });
     this.isLoading = false;
   }
 
