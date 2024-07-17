@@ -22,7 +22,7 @@
                 <form [formGroup]="form" (ngSubmit)="onLogin()">
                     <div *ngIf="!isSignInActive" class="mb-4">
                       <label for="username" class="block text-sm font-medium text-gray-700">Username:</label>
-                      <input type="text" id="username" class="mt-1 block w-full px-3 py-2 bg-white border-b border-gray-300 focus:border-indigo-500 focus:ring-0">
+                      <input type="text" formControlName="username" id="username" class="mt-1 block w-full px-3 py-2 bg-white border-b border-gray-300 focus:border-indigo-500 focus:ring-0">
                     </div>
 
                     <div class="mb-4">
@@ -51,7 +51,7 @@
                     <div class="flex-grow">
                         <hr class="border">
                     </div>
-                    <h2 class="lg:text-xl font-bold text-center px-3 mb-2">Or</h2>
+                    <h2 class="lg:text-xl font-bold text-center px-3 mb-2">Or Sign Up/Sign In With</h2>
                     <div class="flex-grow">
                         <hr class="border">
                     </div>

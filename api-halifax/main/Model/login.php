@@ -45,24 +45,8 @@ class Login extends GlobalMethods{
                 return array("token" => "", "code" => 403);
             }
         } else {
-            return array("token" => "", "code" => 404, "message" => "User not found");
+            return array("token" => "", "code" => 404, "message" => "User not found", "form" => $form);
         }
-
-
-        // $credentials = json_decode(file_get_contents(__DIR__ . '/../credentials.json'), true);
-
-        // // Iterate through the credentials to find a match
-        // foreach ($credentials['credentials'] as $credential) {
-        //     if ($credential['username'] === $data->username) {
-        //         // Verify the password using password_verify
-        //         if ($data->password === $credential['password']) {                    
-        //             return $this->generateToken($credential['role'], $credential['username']);
-        //         } else {
-        //             return array("token" => "", "code" => 403, "message" => "Invalid password or username");
-        //         }
-        //     }
-        // }
-        // return array("token" => "", "code" => 403, "message" => "User not found");
     }
 
 
@@ -95,7 +79,6 @@ class Login extends GlobalMethods{
                 return $registrationResult;
             }
         } else {
-            //idk how because i need to bind shit i cnat use executegetquery
             $sql = "SELECT * FROM `user` WHERE `email` = :email";
             $stmt = $this->connect()->prepare($sql);
             $stmt->bindParam(':email', $form->email);
@@ -104,8 +87,8 @@ class Login extends GlobalMethods{
             
             if ($result) {
                 return $this->generateToken(
-                    $result['user_ID'],
-                    $result['username']
+                    $result['data'][0]['user_ID'],
+                    $result['data'][0]['username'],
                 );
             } else {
                 return array("token" => "", "code" => 500, "message" => "An error occurred while logging in.");
