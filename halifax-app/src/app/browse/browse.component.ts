@@ -6,6 +6,12 @@ import { BrowseDialogComponent } from './browse-dialog/browse-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Cart } from '../services/cart';
 import {MatSnackBar} from '@angular/material/snack-bar';
+import { TokenService } from '../services/authentication/token.service';
+import { Router } from '@angular/router';
+
+interface JwtPayload{
+  data: any
+}
 
 @Component({
   selector: 'app-browse',
@@ -19,17 +25,24 @@ export class BrowseComponent {
   carts: Cart[] = []
   total: number = -1;
   isCart = false;
+  userDrop = false;
+  userName = '';
 
   constructor(
     private dataService: DataService,
     private dialog: MatDialog,
-    private _snackBar: MatSnackBar
+    private _snackBar: MatSnackBar,
+    private tokenService: TokenService,
+    private routers: Router
   ){
     this.dataService.fetchData("getProduct").subscribe({
       next: (next: any) => {this.product = next;this.calculateTotal();},
       error: (error: any) => {console.log(error)},
       complete: () => {console.log(this.product);}
     });
+
+    const decoded = this.tokenService.decodeToken() as JwtPayload;
+    this.userName = decoded.data.username;
 
     this.fetchCart();
   }
@@ -51,6 +64,10 @@ export class BrowseComponent {
     });
   }
 
+  logout(){
+    this.routers.navigate(['']);
+  }
+
   truncateName(name: string){
     if (name.length > 32) {
       return name.substring(0, 32) + '...';
@@ -65,7 +82,7 @@ export class BrowseComponent {
       }
     }).afterClosed().subscribe(() => {  
       this.fetchCart();
-      this._snackBar.open("Product added to cart.", 'Undo', {duration: 1500})
+    
       
     })
   }

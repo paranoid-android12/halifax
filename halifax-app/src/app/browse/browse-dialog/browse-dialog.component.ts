@@ -48,6 +48,7 @@ export class BrowseDialogComponent {
   submit(){
     this.dataService.postData({product: this.product, count: this.count}, "addCart").subscribe({
       next: (next:any) => {
+        this._snackBar.open("Product added to cart.", 'Undo', {duration: 1500})
         this.dialogRef.close();
       }
     })
