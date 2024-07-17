@@ -59,12 +59,13 @@ class Login extends GlobalMethods{
             return array("token" => "", "code" => 403, "message" => "Username Already Exists");
         }
 
+        $hashedPassword = password_hash($form->password, PASSWORD_DEFAULT);
+
         $params = array('username', 'email', 'password');
         $tempForm = array(
             $form->username,
             $form->email,
-            $form->password,
-        
+            $hashedPassword,
         );
 
         try {
