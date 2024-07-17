@@ -27,4 +27,7 @@ export class DataService {
     return this.http.patch(mainPort + '/halifax/api-halifax/main/' + endpoint, data);
   }
 
+  deleteData(endpoint: string) {
+    return this.http.delete(mainPort + '/halifax/api-halifax/main/' + endpoint);
+  }
 }

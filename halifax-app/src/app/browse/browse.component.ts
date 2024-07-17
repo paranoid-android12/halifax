@@ -5,6 +5,7 @@ import { Product } from '../services/product';
 import { BrowseDialogComponent } from './browse-dialog/browse-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { Cart } from '../services/cart';
+import {MatSnackBar} from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-browse',
@@ -21,7 +22,8 @@ export class BrowseComponent {
 
   constructor(
     private dataService: DataService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private _snackBar: MatSnackBar
   ){
     this.dataService.fetchData("getProduct").subscribe({
       next: (next: any) => {this.product = next;this.calculateTotal();},
@@ -61,19 +63,33 @@ export class BrowseComponent {
       data: {
         product: product
       }
+    }).afterClosed().subscribe(() => {  
+      this.fetchCart();
+      this._snackBar.open("Product added to cart.", 'Undo', {duration: 1500})
+      
     })
   }
 
   incrementValue(cart: Cart){
     this.dataService.patchData({cart_ID: cart.cart_ID, quantity: cart.quantity + 1}, "addQuantity").subscribe({
-      next: () => {this.fetchCart();this.calculateTotal();}
+      next: () => {this.fetchCart();}
     })
   }
 
   decrementValue(cart: Cart){
     if(cart.quantity < 1) return;
     this.dataService.patchData({cart_ID: cart.cart_ID, quantity: cart.quantity - 1}, "addQuantity").subscribe({
-      next: () => {this.fetchCart();this.calculateTotal();}
+      next: () => {this.fetchCart();}
+    })
+  }
+
+  deleteCart(cart: Cart){
+    this.dataService.deleteData("deleteCart?id=" + cart.cart_ID).subscribe({
+      next: (next: any) => {
+        this.fetchCart();
+        this._snackBar.open("Product removed from cart.", 'Undo', {duration: 1500})
+        console.log(next);
+      }
     })
   }
 

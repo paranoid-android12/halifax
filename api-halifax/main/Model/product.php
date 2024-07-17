@@ -47,6 +47,10 @@ class Product extends GlobalMethods
         return $this->executeGetQuery($sql)['data'];
     }
 
+    public function deleteCart($id){
+        return $this->prepareDeleteBind('cart', 'cart_ID', $id);
+    }
+
     public function quantity($data){
         $params = array('quantity');
         $tempForm = array(

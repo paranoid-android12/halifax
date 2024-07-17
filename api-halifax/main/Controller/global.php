@@ -147,6 +147,15 @@ class GlobalMethods extends Connection
         return $this->executePostQuery($stmt);
     }
 
+    public function prepareDeleteBind($table, $col, $id)
+    {
+        $sql = "DELETE FROM `$table` WHERE `$col` = ?";
+
+        $stmt = $this->connect()->prepare($sql);
+        $stmt->bindParam(1, $id);
+        return $this->executePostQuery($stmt);
+    }
+
     public function getLastID($table)
     {
 

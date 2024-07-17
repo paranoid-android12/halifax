@@ -46,5 +46,9 @@ class Tunnel extends GlobalMethods{
         return $this->product->quantity($data);
     }
 
+    public function toDeleteCart($data){
+        return $this->product->deleteCart($data);
+    }
+
 
 }

@@ -82,6 +82,20 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 break;
         }
         break;
+
+    case 'DELETE':
+        switch ($request[0]) {
+            case 'deleteCart':
+                $ver = $globalOb->verifyToken();
+                $id = $_GET['id'];
+                echo json_encode($tunnel->toDeleteCart($id));
+                break;
+
+            default:
+                http_response_code(403);
+                break;
+        }
+        break;
         
     default:
         http_response_code(404);
