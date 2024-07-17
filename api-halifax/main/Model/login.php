@@ -42,7 +42,7 @@ class Login extends GlobalMethods{
                     $result['data'][0]['username'],
                 );
             } else {
-                return array("token" => "", "code" => 403);
+                return array("token" => "", "code" => 403, "message" => "Invalid Password");
             }
         } else {
             return array("token" => "", "code" => 404, "message" => "User not found", "form" => $form);
@@ -51,24 +51,38 @@ class Login extends GlobalMethods{
 
 
     public function registerValidate($form){
+
         if ($this->checkUserExists($form->email)) {
             return array("token" => "", "code" => 403, "message" => "User Already Exists");
         }
-
         if($this->checkUserNameExists($form->username)){
             return array("token" => "", "code" => 403, "message" => "Username Already Exists");
         }
 
-        $sql = "INSERT INTO `user`(`username`, `email`, `password`) VALUES ('$form->username', '$form->email', '$form->password')";
-        $result = $this->executeGetQuery($sql);
-        if ($result['code'] == 200) {
-            return $this->generateToken(
-                $result['data'][0]['user_ID'],
-                $result['data'][0]['username'],
-            );
-        } else {
-            return array("token" => "", "code" => 404, "message" => "Registration Unsuccessful.");
+        $params = array('username', 'email', 'password');
+        $tempForm = array(
+            $form->username,
+            $form->email,
+            $form->password,
+        
+        );
+
+        try {
+            $result = $this->prepareAddBind('user', $params, $tempForm);
+            if($result['code'] == 200){
+                return $this->generateToken(
+                    $result['data']['lastID'],
+                    $form->username,
+                );
+            } else {
+                return array("token" => "", "code" => 500, "message" => "An error occurred while registering.");
+            }
+        } catch (\Throwable $th) {
+            header('HTTP/1.0 500 Internal Server Error');
+            echo 'Token not found in request';
+            exit;
         }
+
     }
 
     public function googleLogin($form){

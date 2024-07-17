@@ -33,7 +33,7 @@ export class LoginComponent {
   isSignInActive: boolean = true;
   googleLogin: boolean = false;
 
-  constructor(private authService: AuthService, private tokenService: TokenService, private titleService: Title, private formBuilder: FormBuilder, private routers: Router, private dataService: DataService) {
+  constructor(private loginService: LoginService, private authService: AuthService, private tokenService: TokenService, private titleService: Title, private formBuilder: FormBuilder, private routers: Router, private dataService: DataService) {
     this.tokenService.flushToken();
     this.form = new FormGroup({
       email: new FormControl('', [Validators.required]),
@@ -92,6 +92,7 @@ export class LoginComponent {
   }
 
   setTokenInCookie(token: string) {
+    console.log("setting token in cookie ", token);
     let expireDate = new Date();
     expireDate.setTime(expireDate.getTime() + (60 * 60 * 1000));
     document.cookie = `token=${token}; ${expireDate}; path=/`
@@ -104,7 +105,7 @@ export class LoginComponent {
 
   onLogin() {
     this.isLoading = true;
-    let endpoint = 'register';
+    let endpoint = 'registerUser';
     if(this.isSignInActive) {
       endpoint = 'login';
     } 
@@ -119,6 +120,7 @@ export class LoginComponent {
         console.log(next);
         if(next.code === 200){
           this.setTokenInCookie(next.token);
+          this.loginService.LoggedIn();
           this.routers.navigate(['/browse']);
         } else {
           if(next.message === "User already exists") {
@@ -127,6 +129,8 @@ export class LoginComponent {
           } else if (next.message === "User not found") {
 
             this.errorMessage = "User not found. Please register.";
+          } else {
+            this.errorMessage = next.message;
           }
         }
       },

@@ -15,17 +15,20 @@ export const authGuard: CanActivateFn = (route, state) => {
   const token = inject(TokenService)
 
   if(token.getToken() === null) {
+    console.log("no token")
     return false;
   }
 
-  const decoded = token.decodeToken();
-  const priv = token.userRoleToken(decoded);
+  // const decoded = token.decodeToken();
+  // const priv = token.userRoleToken(decoded);
 
-  const urlRoot = state.url.split("/")[1];
-  // Logging on to Admin page
-  if(urlRoot === "admin" && priv !== "admin") {
-    return false;
-  }
+  // const urlRoot = state.url.split("/")[1];
+  // // Logging on to Admin page
+  // if(urlRoot === "admin" && priv !== "admin") {
+  //   return false;
+  // }
+
+  console.log("got token")
 
   return true;
 

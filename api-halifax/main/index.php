@@ -52,7 +52,7 @@ switch ($_SERVER['REQUEST_METHOD']) {
             case 'login':
                 echo json_encode($tunnel->toLogin($data));
                 break;
-            case 'register':
+            case 'registerUser':
                 echo json_encode($tunnel->toRegister($data));
                 break;
             case 'google-login':
