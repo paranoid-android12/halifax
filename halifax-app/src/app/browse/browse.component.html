@@ -5,7 +5,7 @@
     <div class="bg-white h-[60px] overscroll-none justify-between items-center py-2 px-6 flex flex-row border-b-2 border-[#E8E8E8]">
         <p class="font-Sofia font-[1000] text-[1.4rem]">Halifax</p>
     </div>
-    <div class="p-10 grid">
+    <div class="p-10 grid select-none">
         <div (click)="isCart = !isCart" class="rounded-[50%] w-[50px] h-[50px] bg-white flex justify-center items-center shadow-main">
             <svg width="30" height="30" viewBox="0 0 51 51" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M11.1562 23.9062H43.0312C43.4539 23.9062 43.8593 24.0742 44.1582 24.373C44.4571 24.6719 44.625 25.0773 44.625 25.5C44.625 25.9227 44.4571 26.3281 44.1582 26.627C43.8593 26.9258 43.4539 27.0938 43.0312 27.0938H11.1562C10.7336 27.0938 10.3282 26.9258 10.0293 26.627C9.73041 26.3281 9.5625 25.9227 9.5625 25.5C9.5625 25.0773 9.73041 24.6719 10.0293 24.373C10.3282 24.0742 10.7336 23.9062 11.1562 23.9062Z" fill="#2A5C66"/>
@@ -14,14 +14,40 @@
         </div>
 
         <p class="font-Sofia font-[1000] text-[2.2rem]">Products on Cart</p>
-        <div class="flex flex-row">
-            <div>
-                iter segnemtn
+        <div class="flex flex-row gap-2">
+            <div class="flex flex-col flex-1 grid gap-3">
+                <div *ngFor="let cart of carts" class="flex flex-row border-2">
+                    <img class="w-[100px]" [src]="cart.product_image">
+                    <div class="flex flex-col px-3 py-2">
+                        <p>{{ cart.product_name }}</p>
+                        <p class="text-[1.2rem] text-[#6437A0]">₱{{ cart.product_price * cart.quantity }}</p>
+
+
+                        <div class="flex flex-row w-[100px] border-2 justify-between my-3">
+                            <div class="bg-[#F9F9F9]">
+                                <svg (click)="decrementValue(cart)" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M19 12.998H5V10.998H19V12.998Z" fill="#6437A0"/>
+                                </svg>
+                                    
+                            </div>
+                
+                            <p class="flex-1 text-center">{{cart.quantity}}</p>
+                
+                            <div class="bg-[#F9F9F9]">
+                                <svg (click)="incrementValue(cart)" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M19 12.998H13V18.998H11V12.998H5V10.998H11V4.99805H13V10.998H19V12.998Z" fill="#6437A0"/>
+                                </svg>
+                                    
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div>
-                summary segment price
-            </div>
+            <footer class="fixed bottom-0 w-full bg-white h-[60px] flex items-center border-t-2">
+                <p class="text-[1rem] font-bold px-3 py-2 text-[#6437A0]">Products on Cart: {{ carts.length }}</p>
+                <p class="text-[1rem] font-bold px-3 py-2 text-[#6437A0]">Total: ₱{{ total }}</p>
+            </footer>
         </div>
     </div>
 }
@@ -36,7 +62,12 @@
             <div class="w-full flex flex-row justify-between items-center">
                 <p class="font-Sofia font-[1000] text-[2.2rem]">Browse Products</p>
                 <div (click)="isCart = !isCart" class="rounded-[100px] bg-[#6437A0] p-2 px-3">
-                    <p class="font-Sofia font-bold text-[1rem] text-white">Check Cart</p>
+                    @if(carts.length < 1){
+                        <p class="font-Sofia font-bold text-[1rem] text-white cursor-pointer">Check Cart</p>
+                    }
+                    @else {
+                        <p class="font-Sofia font-bold text-[1rem] text-white cursor-pointer">Check Cart ({{ carts.length }})</p>
+                    }
                 </div>
             </div>
             <div

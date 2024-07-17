@@ -23,4 +23,8 @@ export class DataService {
     return this.http.post(mainPort + '/halifax/api-halifax/main/' + endpoint, data);
   }
 
+  patchData(data: any, endpoint: string) {
+    return this.http.patch(mainPort + '/halifax/api-halifax/main/' + endpoint, data);
+  }
+
 }

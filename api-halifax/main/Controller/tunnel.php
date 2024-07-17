@@ -30,7 +30,12 @@ class Tunnel extends GlobalMethods{
     }
 
     public function toGetCart($id){
-        // return $this->product->getCart()
+        return $this->product->getCart($id);
     }
+
+    public function toQuantity($data){
+        return $this->product->quantity($data);
+    }
+
 
 }

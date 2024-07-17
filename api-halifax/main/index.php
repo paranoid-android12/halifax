@@ -38,6 +38,11 @@ switch ($_SERVER['REQUEST_METHOD']) {
             case 'getProduct':
                 echo json_encode($tunnel->toGetProduct());
                 break;
+
+            case 'getCart':
+                $ver = $globalOb->verifyToken();
+                echo json_encode($tunnel->toGetCart($ver['payload']['userID']));
+                break;
         }
         break;
 
@@ -58,6 +63,21 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 break;
         }
         break;
+
+    case 'PATCH':
+        $data = json_decode(file_get_contents("php://input"));
+        switch ($request[0]) {
+            case 'addQuantity':
+                // $ver = $globalOb->verifyToken();
+                echo json_encode($tunnel->toQuantity($data));
+                break;
+
+            default:
+                http_response_code(403);
+                break;
+        }
+        break;
+        
     default:
         http_response_code(404);
         break;

@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { Product } from '../services/product';
 import { BrowseDialogComponent } from './browse-dialog/browse-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { Cart } from '../services/cart';
 
 @Component({
   selector: 'app-browse',
@@ -14,22 +15,43 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class BrowseComponent {
   product: Product[] = []
-  isCart = true;
+  carts: Cart[] = []
+  total: number = -1;
+  isCart = false;
 
   constructor(
     private dataService: DataService,
     private dialog: MatDialog
   ){
     this.dataService.fetchData("getProduct").subscribe({
-      next: (next: any) => {this.product = next;},
+      next: (next: any) => {this.product = next;this.calculateTotal();},
       error: (error: any) => {console.log(error)},
       complete: () => {console.log(this.product);}
+    });
+
+    this.fetchCart();
+  }
+
+  calculateTotal(){
+    this.total = 0;
+    this.carts.forEach(cart => {
+      this.total = this.total + cart.product_price * cart.quantity;
     })
   }
 
+  fetchCart(){
+    this.dataService.fetchData("getCart").subscribe({
+      next: (next: any) => {
+        console.log(next);
+        this.carts = next;
+        this.calculateTotal();
+      }
+    });
+  }
+
   truncateName(name: string){
-    if (name.length > 35) {
-      return name.substring(0, 35) + '...';
+    if (name.length > 32) {
+      return name.substring(0, 32) + '...';
     }
     return name;
   }
@@ -39,6 +61,19 @@ export class BrowseComponent {
       data: {
         product: product
       }
+    })
+  }
+
+  incrementValue(cart: Cart){
+    this.dataService.patchData({cart_ID: cart.cart_ID, quantity: cart.quantity + 1}, "addQuantity").subscribe({
+      next: () => {this.fetchCart();this.calculateTotal();}
+    })
+  }
+
+  decrementValue(cart: Cart){
+    if(cart.quantity < 1) return;
+    this.dataService.patchData({cart_ID: cart.cart_ID, quantity: cart.quantity - 1}, "addQuantity").subscribe({
+      next: () => {this.fetchCart();this.calculateTotal();}
     })
   }
 

@@ -44,6 +44,23 @@ class Product extends GlobalMethods
                 FROM `cart`
                 INNER JOIN product on `cart`.`product_ID`=`product`.`product_ID`
                 WHERE user_ID = $id;";
-        return $this->executeGetQuery($sql['data']);
+        return $this->executeGetQuery($sql)['data'];
+    }
+
+    public function quantity($data){
+        $params = array('quantity');
+        $tempForm = array(
+            $data->quantity,
+            $data->cart_ID
+        );
+
+        try {
+            //code...
+            return $this->prepareEditBind('cart', $params, $tempForm, "cart_ID");
+        } catch (\Throwable $th) {
+            header('HTTP/1.0 500 Internal Server Error');
+            echo 'Query issue: ' . $th;
+            exit;
+        }
     }
 }
