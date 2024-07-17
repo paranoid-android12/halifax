@@ -17,7 +17,7 @@ class Login extends GlobalMethods{
             'aud' => 'localhost', // Audience
             'exp' => time() + 10000, //in seconds, 1hour
             'data' => [
-                'role' => $role, // User role
+                'userID' => $role, // User role
                 'username' => $name
             ]
 
@@ -29,21 +29,40 @@ class Login extends GlobalMethods{
         );
     }
 
-    public function loginValidate($data){
-        $credentials = json_decode(file_get_contents(__DIR__ . '/../credentials.json'), true);
-
-        // Iterate through the credentials to find a match
-        foreach ($credentials['credentials'] as $credential) {
-            if ($credential['username'] === $data->username) {
-                // Verify the password using password_verify
-                if ($data->password === $credential['password']) {                    
-                    return $this->generateToken($credential['role'], $credential['username']);
-                } else {
-                    return array("token" => "", "code" => 403, "message" => "Invalid password or username");
-                }
+    public function loginValidate($form){
+        $sql = "SELECT * FROM `user` WHERE `email` = '$form->email'";
+        $result = $this->executeGetQuery($sql);
+        // echo json_encode($form);
+        if ($result['code'] == 200) {
+            // echo json_encode($result);
+            $passValid = password_verify($form->password, $result['data'][0]['password']);
+            if ($passValid) {
+                return $this->generateToken(
+                    $result['data'][0]['user_ID'],
+                    $result['data'][0]['username'],
+                );
+            } else {
+                return array("token" => "", "code" => 403);
             }
+        } else {
+            return $this->executeGetQuery($sql);
         }
-        return array("token" => "", "code" => 403, "message" => "User not found");
+
+
+        // $credentials = json_decode(file_get_contents(__DIR__ . '/../credentials.json'), true);
+
+        // // Iterate through the credentials to find a match
+        // foreach ($credentials['credentials'] as $credential) {
+        //     if ($credential['username'] === $data->username) {
+        //         // Verify the password using password_verify
+        //         if ($data->password === $credential['password']) {                    
+        //             return $this->generateToken($credential['role'], $credential['username']);
+        //         } else {
+        //             return array("token" => "", "code" => 403, "message" => "Invalid password or username");
+        //         }
+        //     }
+        // }
+        // return array("token" => "", "code" => 403, "message" => "User not found");
     }
 }
 

@@ -12,7 +12,7 @@ export class DataService {
 
   login(data: any, endpoint: string) {
     console.log("got it")
-    return this.http.post(data ,mainPort + '/halifax/api-halifax/main/' + endpoint);
+    return this.http.post(mainPort + '/halifax/api-halifax/main/' + endpoint, data.getRawValue());
   }
 
   fetchData(endpoint: string) {

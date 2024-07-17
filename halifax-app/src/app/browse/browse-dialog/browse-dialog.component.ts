@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Product } from '../../services/product';
 import { DataService } from '../../services/data.service';
 
@@ -17,6 +17,7 @@ export class BrowseDialogComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dataService: DataService,
+    private dialogRef: MatDialogRef<BrowseDialogComponent>
   ){
     this.product = data.product;
   }
@@ -28,7 +29,10 @@ export class BrowseDialogComponent {
 
   submit(){
     this.dataService.postData({product: this.product, count: this.count}, "addCart").subscribe({
-      next: (next:any) => console.log(next)
+      next: (next:any) => {
+        console.log(next);
+        this.dialogRef.close();
+      }
     })
   }
 

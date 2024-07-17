@@ -14,6 +14,7 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class BrowseComponent {
   product: Product[] = []
+  isCart = true;
 
   constructor(
     private dataService: DataService,
@@ -40,4 +41,6 @@ export class BrowseComponent {
       }
     })
   }
+
+
 }

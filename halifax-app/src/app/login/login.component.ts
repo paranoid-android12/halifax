@@ -13,6 +13,7 @@ import {MatIconModule} from '@angular/material/icon';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+import { TokenService } from '../services/authentication/token.service';
 
 @Component({
   selector: 'app-login',
@@ -31,9 +32,10 @@ export class LoginComponent {
   private subscriptions = new Subscription();
   isSignInActive: boolean = true;
 
-  constructor(private authService: AuthService, private loginService: LoginService, private titleService: Title, private formBuilder: FormBuilder, private routers: Router, private dataService: DataService) {
+  constructor(private authService: AuthService, private cookieService: TokenService, private titleService: Title, private formBuilder: FormBuilder, private routers: Router, private dataService: DataService) {
+    this.cookieService.flushToken();
     this.form = new FormGroup({
-      username: new FormControl('', [Validators.required]),
+      email: new FormControl('', [Validators.required]),
       password: new FormControl('', [Validators.required])
     });
   }
@@ -45,7 +47,7 @@ export class LoginComponent {
         console.log('Google account response:', response);
         console.log('Google account credential: ', response.credential);
         this.setTokenInCookie(response.credential);
-        this.loginService.LoggedIn();
+        // this.loginService.LoggedIn();
         this.navigateBasedOnRole();
       }
     });
@@ -105,6 +107,17 @@ export class LoginComponent {
     let endpoint = 'register';
     if(this.isSignInActive) {
       endpoint = 'login';
+      console.log(this.form);
+      this.dataService.login(this.form, "login").subscribe({
+        next: (next:any) => {
+          console.log(next);
+          if(next.code === 200){
+            this.setTokenInCookie(next.token);
+            this.routers.navigate(['/browse']);
+          }
+        },
+
+      })
     }
 
     console.log("this was the endpoint", endpoint);

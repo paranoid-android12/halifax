@@ -64,7 +64,10 @@ class GlobalMethods extends Connection
             $payload = JWT::decode($jwt, new Key($secretKey, 'HS512'), $headers);
             return array(
                 "code" => 200,
-                "payload" => ''
+                "payload" => array(
+                    "userID" => $payload->data->userID,
+                    "username" => $payload->data->username
+                )
             );
         } catch (\Throwable $th) {
             // throw $th;

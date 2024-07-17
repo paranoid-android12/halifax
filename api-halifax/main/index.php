@@ -33,7 +33,7 @@ if (isset($_REQUEST['request'])) {
 // //Main request switch endpoints
 switch ($_SERVER['REQUEST_METHOD']) {
     case 'GET':
-        // $ver = $globalOb->verifyToken();
+        $ver = $globalOb->verifyToken();
         switch ($request[0]) {
             case 'getProduct':
                 echo json_encode($tunnel->toGetProduct());
@@ -49,7 +49,8 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 break;
 
             case 'addCart':
-                echo json_encode($tunnel->toAddCart($data));
+                $ver = $globalOb->verifyToken();
+                echo json_encode($tunnel->toAddCart($data, $ver['payload']['userID']));
                 break;
 
             default:

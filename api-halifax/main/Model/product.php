@@ -14,12 +14,12 @@ class Product extends GlobalMethods
         }
     }
 
-    public function addCart($form){
+    public function addCart($form, $id){
                 //Initial adding of product
                 $params = array('product_ID', 'user_ID', 'quantity');
                 $tempForm = array(
                     $form->product->product_ID,
-                    1,
+                    $id,
                     $form->count,
                 );
         
@@ -37,5 +37,13 @@ class Product extends GlobalMethods
     public function getProduct(){
         $sql = "SELECT * FROM product;";
         return $this->executeGetQuery($sql)['data'];
+    }
+
+    public function getCart($id){
+        $sql = "SELECT *
+                FROM `cart`
+                INNER JOIN product on `cart`.`product_ID`=`product`.`product_ID`
+                WHERE user_ID = $id;";
+        return $this->executeGetQuery($sql['data']);
     }
 }
