@@ -55,6 +55,7 @@ export class LoginComponent {
         this.form.get('username')!.setValue(userName);
         this.form.get('password')!.setValue(userName);
         this.googleLogin = true;
+        
         this.onLogin();
 
       }
