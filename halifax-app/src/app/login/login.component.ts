@@ -31,12 +31,14 @@ export class LoginComponent {
   form: FormGroup;
   private subscriptions = new Subscription();
   isSignInActive: boolean = true;
+  googleLogin: boolean = false;
 
-  constructor(private authService: AuthService, private cookieService: TokenService, private titleService: Title, private formBuilder: FormBuilder, private routers: Router, private dataService: DataService) {
-    this.cookieService.flushToken();
+  constructor(private authService: AuthService, private tokenService: TokenService, private titleService: Title, private formBuilder: FormBuilder, private routers: Router, private dataService: DataService) {
+    this.tokenService.flushToken();
     this.form = new FormGroup({
       email: new FormControl('', [Validators.required]),
-      password: new FormControl('', [Validators.required])
+      password: new FormControl('', [Validators.required]),
+      username: new FormControl('')
     });
   }
 
@@ -44,11 +46,17 @@ export class LoginComponent {
     google.accounts.id.initialize({
       client_id: '29716397471-rli2g9ckpmqqg94h4vniv7jrd7akos34.apps.googleusercontent.com',
       callback: (response: any) => {
-        console.log('Google account response:', response);
-        console.log('Google account credential: ', response.credential);
-        this.setTokenInCookie(response.credential);
-        // this.loginService.LoggedIn();
-        this.navigateBasedOnRole();
+        //decode the credential
+        let decodedToken = this.tokenService.decode(response.credential);
+        let userEmail = this.tokenService.userGoogleEmailToken(decodedToken);
+        let userName = this.tokenService.userGoogleNameToken(decodedToken);
+        //take the email and set it to the form
+        this.form.get('email')!.setValue(userEmail);
+        this.form.get('username')!.setValue(userName);
+        this.form.get('password')!.setValue(userName);
+        this.googleLogin = true;
+        this.onLogin();
+
       }
     });
 
@@ -61,9 +69,7 @@ export class LoginComponent {
       height: '100',
     });
 
-
-    // to dynamically remove the error messag ewhen the user types in something new
-    this.titleService.setTitle('Login - 888 HARDWARE TRADING');
+    this.titleService.setTitle('Halifax - Everything In One Place');
     const usernameSubscription = this.form.get('username')!.valueChanges.subscribe(() => {
       this.errorMessage = '';
     });
@@ -93,36 +99,44 @@ export class LoginComponent {
 
   navigateBasedOnRole() {
     console.log("navigate to user page");
-    // let role = this.authService.getRole();
     this.routers.navigate(['/browse']);
-    // if (role === 'admin'){
-    //   this.routers.navigate(['/admin/dashboard']);
-    // } else {
-    //   console.log("idk what to do")
-    //   //this.routers.navigate(['/drive']);
-    // }
   }
 
   onLogin() {
+    this.isLoading = true;
     let endpoint = 'register';
     if(this.isSignInActive) {
       endpoint = 'login';
-      console.log(this.form);
-      this.dataService.login(this.form, "login").subscribe({
-        next: (next:any) => {
-          console.log(next);
-          if(next.code === 200){
-            this.setTokenInCookie(next.token);
-            this.routers.navigate(['/browse']);
-          }
-        },
+    } 
 
-      })
+    if(this.googleLogin) {
+      endpoint = 'google-login';
     }
+
+    console.log(this.form.value);
+    this.dataService.login(this.form, endpoint).subscribe({
+      next: (next:any) => {
+        console.log(next);
+        if(next.code === 200){
+          this.setTokenInCookie(next.token);
+          this.routers.navigate(['/browse']);
+        } else {
+          if(next.message === "User already exists") {
+
+            this.errorMessage = "User already exists. Please login.";
+          } else if (next.message === "User not found") {
+
+            this.errorMessage = "User not found. Please register.";
+          }
+        }
+      },
+
+    })
+
+    this.googleLogin = false;
 
     console.log("this was the endpoint", endpoint);
 
-    this.isLoading = true;
     // this.dataService.login(this.form, endpoint).subscribe({
     //   next: (res: any) => {
     //     if(res.code !== 403){

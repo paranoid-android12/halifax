@@ -9,6 +9,7 @@ include_once __DIR__ . '/./global.php';
 
 class Tunnel extends GlobalMethods{
     private $product;
+    private $login;
 
     public function __construct()
     {
@@ -19,6 +20,14 @@ class Tunnel extends GlobalMethods{
 
     public function toLogin($data){
         return $this->login->loginValidate($data);
+    }
+
+    public function toRegister($data){
+        return $this->login->registerValidate($data);
+    }
+
+    public function toGoogleLogin($data){
+        return $this->login->googleLogin($data);
     }
 
     public function toGetProduct(){

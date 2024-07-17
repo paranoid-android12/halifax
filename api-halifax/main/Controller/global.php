@@ -183,8 +183,6 @@ class GlobalMethods extends Connection
     }
 
 
-
-
     public function saveImage($image, $outputFolder, $fileFormat = 'png', $name, $id)
     {
         try {
@@ -215,5 +213,35 @@ class GlobalMethods extends Connection
             echo 'Token not found in request: ' . $th;
             exit;
         }
+    }
+
+    //idk where to put this huhuhu
+    public function checkUserExists($email) {
+
+        $sql = "SELECT COUNT(*) AS count FROM `user` WHERE `email` = :email";
+
+        $stmt = $this->connect()->prepare($sql);
+        
+        $stmt->bindParam(':email', $email);
+
+        $stmt->execute();
+
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $result['count'] > 0;
+    }
+
+    public function checkUserNameExists($username) {
+
+        $sql = "SELECT COUNT(*) AS count FROM `user` WHERE `username` = :username";
+        $stmt = $this->connect()->prepare($sql);
+
+        $stmt->bindParam(':username', $username);
+
+        $stmt->execute();
+
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $result['count'] > 0;
     }
 }

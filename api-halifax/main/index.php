@@ -52,7 +52,12 @@ switch ($_SERVER['REQUEST_METHOD']) {
             case 'login':
                 echo json_encode($tunnel->toLogin($data));
                 break;
-
+            case 'register':
+                echo json_encode($tunnel->toRegister($data));
+                break;
+            case 'google-login':
+                echo json_encode($tunnel->toGoogleLogin($data));
+                break;
             case 'addCart':
                 $ver = $globalOb->verifyToken();
                 echo json_encode($tunnel->toAddCart($data, $ver['payload']['userID']));

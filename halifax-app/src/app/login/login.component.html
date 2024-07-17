@@ -10,12 +10,12 @@
     </div>
 
     <div class="flex flex-col justify-center div2 md:min-w-[40%] h-3/5 md:h-full md:bg-custom-dark bg-white "> 
-        <div class="pt-5 md:bg-white lg:pt-10  rounded-lg">
+        <div class="pt-5 md:bg-white lg:pt-10 rounded-lg">
 
             <div class="container p-4">
-                <h2 class="text-4xl font-bold font-Sofia md:mb-5">{{ isSignInActive ? 'Welcome Back' : 'Create an Account' }}</h2>
+                <h2 class="lg:text-4xl text-2xl font-bold font-Sofia md:mb-5 mt-2" style="color: #6437A0;" >{{ isSignInActive ? 'Welcome Back' : 'Create an Account' }}</h2>
                               
-                <a (click)="toggleForm()" class="inline-block align-baseline Sofia font-bold text-sm hover:text-indigo-800 mb-1 md:mb-4">
+                <a (click)="toggleForm()" class="inline-block align-baseline Sofia font-bold text-xs lg:text-sm hover:text-indigo-800 mb-1 md:mb-4">
                     {{ isSignInActive ? 'Don’t have an account? Sign up' : 'Already have an account? Sign in' }}
                 </a>
 
@@ -24,79 +24,44 @@
                       <label for="username" class="block text-sm font-medium text-gray-700">Username:</label>
                       <input type="text" id="username" class="mt-1 block w-full px-3 py-2 bg-white border-b border-gray-300 focus:border-indigo-500 focus:ring-0">
                     </div>
-                  
+
                     <div class="mb-4">
-                      <label for="email" class="block text-sm font-medium text-gray-700">Email:</label>
-                      <input formControlName="email" type="email" id="email" class="mt-1 block w-full px-3 py-2 bg-white border-b border-gray-300 focus:border-indigo-500 focus:ring-0">
+                        <label for="email" class="block text-sm font-medium text-gray-700">
+                          {{ isSignInActive ? 'Email or Username:' : 'Email:' }}
+                        </label>
+                        <input [attr.type]="isSignInActive ? 'text' : 'email'" formControlName="email" id="email" class="mt-1 block w-full px-3 py-2 bg-white border-b border-gray-300 focus:border-indigo-500 focus:ring-0">
                     </div>
-                  
+
                     <div class="mb-6">
                       <label for="password" class="block text-sm font-medium text-gray-700">Password:</label>
                       <input formControlName="password" type="password" id="password" class="mt-1 block w-full px-3 py-2 bg-white border-b border-gray-300 focus:border-indigo-500 focus:ring-0">
                     </div>
-                  
+
+                    <div *ngIf="errorMessage" class="mb-4">
+                        <p class="text-sm font-medium text-red-600">{{ errorMessage }}</p>
+                    </div>
+
+                   <div class="flex justify-end">
                     <button type="submit" style="background-color: #6437A0;" class="rounded-lg flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">{{ isSignInActive ? 'Sign In' : 'Sign Up' }}</button>
+                   </div>
+                    
                 </form>
 
                 <div class="flex items-center justify-center md:mt-5">
                     <div class="flex-grow">
-                      <hr class="border">
+                        <hr class="border">
                     </div>
                     <h2 class="lg:text-xl font-bold text-center px-3 mb-2">Or</h2>
                     <div class="flex-grow">
-                      <hr class="border">
+                        <hr class="border">
                     </div>
-                  </div>
-                  <div class="flex justify-center items-center lg:mt-5">
-                    <div id="google-btn"></div>
-                  </div>
                 </div>
-
-            <!-- <div>
-                <h2 class="lg:text-4xl text-large font-bold pl-3 lg:pl-5">Create an Account</h2>
-                <h5 class="lg:text-lg text-xs lg:pt-5 pl-3 pl-10">Sign Up With Email</h5>
-                <h5 class="lg:text-lg text-xs pl-3 pl-10">Already Have An Account? Sign-In</h5>
-            </div>
-            <div class="flex justify-center items-center ">
-                <form method="POST" [formGroup]="form" (ngSubmit)="onLogin()">
-                    <div class="pt-10">
-                        <div class="flex flex-row">
-
-                            <input placeholder="Enter Username" type="text" id="username" formControlName="username" (keydown.enter)="$event.stopPropagation(); $event.preventDefault()">
-                        </div>
-
-
-                        <div class="pt-3 flex flex-row relative">
-                            <input placeholder="Enter Password"  [type]="hide ? 'password' : 'text'" matInput formControlName="password" class="pl-10" (keydown.enter)="onLogin(); $event.stopPropagation(); $event.preventDefault()">
-                            <button type="button" class="absolute right-0 mr-4 mb-0 mt-2" matSuffix (click)="toggleVisibility($event)" style="top: 50%; transform: translateY(-50%);">
-                                <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-                            </button>
-                        </div>
-
-
-                        <div *ngIf="this.errorMessage" class="text-red-500 text-xs pt-3">
-                            {{ this.errorMessage }}
-                        </div>
-
-
-                        <div class="flex justify-end pt-3 pb-3 font-DMSans ">
-                            <button type="submit" style="padding: 10px; background-color: #6437A0; color: white; border-radius: 10px;" [disabled]="!form.valid">
-                                <div *ngIf="isLoading; else loginText" class="flex justify-center items-center w-full">
-                                    <mat-spinner [diameter]="30"></mat-spinner>
-                                </div>
-                                <ng-template #loginText>Continue</ng-template>
-                            </button>
-                        </div>
-                    </div>
-
-                </form>
-            </div>
-            <div>
-                <h2 class="lg:text-xl font-bold text-center">Or</h2>
-                <div>
+                <div class="flex justify-center items-center lg:mt-5">
                     <div id="google-btn"></div>
                 </div>
-            </div> -->
+
+            </div>
+            
         </div>
     </div>
 </div>

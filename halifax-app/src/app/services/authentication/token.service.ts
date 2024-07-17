@@ -32,6 +32,12 @@ export class TokenService {
     }
   }
 
+
+  decode(token: string) {
+    const decodedToken = jwtDecode(token);
+    return decodedToken
+  }
+
   decodeToken() {
     const usertoken = this.getToken();
     if(usertoken) {
@@ -65,6 +71,22 @@ export class TokenService {
     }
   } 
 
+  userGoogleEmailToken(decodedToken: any): string {
+    if(decodedToken && decodedToken.email) {
+      return decodedToken.email;
+    } else {
+      return '';
+    }
+  }
+
+  userGoogleNameToken(decodedToken: any): string {
+    if(decodedToken && decodedToken.name) {
+      return decodedToken.name;
+    } else {
+      return '';
+    }
+  }
+      
   userRoleToken(decodedToken: any): string {
     if (decodedToken && decodedToken.data) {
       return decodedToken.data.role;
