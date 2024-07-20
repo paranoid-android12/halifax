@@ -25,9 +25,12 @@ export class BrowseComponent {
   product: Product[] = []
   carts: Cart[] = []
   total: number = -1;
-  isCart = false;
+  isCart = true;
   userDrop = false;
   userName = '';
+  countdown: string = '';
+  intervalId: number = -1;
+  shippingFee: number = 78;
 
   constructor(
     private dataService: DataService,
@@ -46,6 +49,36 @@ export class BrowseComponent {
     this.userName = decoded.data.username;
 
     this.fetchCart();
+    this.startCountdown()
+
+
+  }
+
+  startCountdown(): void {
+    const endTime = new Date();
+    endTime.setSeconds(endTime.getSeconds() + 45); // Adding seconds
+    endTime.setMinutes(endTime.getMinutes() + 56); // Adding minutes
+    endTime.setHours(endTime.getHours() + 12); // Adding hours
+    endTime.setDate(endTime.getDate() + 2); // Adding days
+
+    this.intervalId = window.setInterval(() => {
+      const now = new Date();
+      const distance = endTime.getTime() - now.getTime();
+
+      if (distance < 0) {
+        clearInterval(this.intervalId);
+        this.countdown = 'EXPIRED';
+        return;
+      }
+
+      // Time calculations
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      this.countdown = `${days} : ${hours} : ${minutes} : ${seconds}`;
+    }, 1000);
   }
 
   calculateTotal(){
@@ -53,6 +86,10 @@ export class BrowseComponent {
     this.carts.forEach(cart => {
       this.total = this.total + cart.product_price * cart.quantity;
     })
+  }
+
+  toggleCart(){
+    this.isCart = !this.isCart;
   }
 
   fetchCart(){
@@ -112,4 +149,8 @@ export class BrowseComponent {
   }
 
 
+
+
+
+  
 }

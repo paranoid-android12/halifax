@@ -2,20 +2,18 @@
 
 
 @if(isCart){
-    <div class="bg-white h-[60px] overscroll-none justify-between items-center py-2 px-6 flex flex-row border-b-2 border-[#E8E8E8]">
-        <p class="font-Sofia font-[1000] text-[1.4rem]">Halifax</p>
-    </div>
-    <div class="p-10 grid select-none">
-        <div (click)="isCart = !isCart" class="rounded-[50%] w-[50px] h-[50px] bg-white flex justify-center items-center shadow-main">
+    <app-topnav (toggleCart)="toggleCart()"></app-topnav>
+    <div class="p-10 px-[150px] grid select-none">
+        <!-- <div (click)="isCart = !isCart" class="rounded-[50%] w-[50px] h-[50px] bg-white flex justify-center items-center shadow-main">
             <svg width="30" height="30" viewBox="0 0 51 51" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M11.1562 23.9062H43.0312C43.4539 23.9062 43.8593 24.0742 44.1582 24.373C44.4571 24.6719 44.625 25.0773 44.625 25.5C44.625 25.9227 44.4571 26.3281 44.1582 26.627C43.8593 26.9258 43.4539 27.0938 43.0312 27.0938H11.1562C10.7336 27.0938 10.3282 26.9258 10.0293 26.627C9.73041 26.3281 9.5625 25.9227 9.5625 25.5C9.5625 25.0773 9.73041 24.6719 10.0293 24.373C10.3282 24.0742 10.7336 23.9062 11.1562 23.9062Z" fill="#2A5C66"/>
                 <path d="M11.816 25.5L25.0345 38.7154C25.3338 39.0146 25.5019 39.4205 25.5019 39.8437C25.5019 40.267 25.3338 40.6729 25.0345 40.9721C24.7353 41.2714 24.3294 41.4395 23.9062 41.4395C23.4829 41.4395 23.0771 41.2714 22.7778 40.9721L8.43404 26.6284C8.28562 26.4803 8.16787 26.3045 8.08752 26.1108C8.00718 25.9172 7.96582 25.7096 7.96582 25.5C7.96582 25.2904 8.00718 25.0828 8.08752 24.8892C8.16787 24.6955 8.28562 24.5197 8.43404 24.3716L22.7778 10.0279C23.0771 9.72861 23.4829 9.56049 23.9062 9.56049C24.3294 9.56049 24.7353 9.72861 25.0345 10.0279C25.3338 10.3271 25.5019 10.733 25.5019 11.1562C25.5019 11.5795 25.3338 11.9854 25.0345 12.2846L11.816 25.5Z" fill="#2A5C66"/>
             </svg>
-        </div>
+        </div> -->
 
         <p class="font-Sofia font-[1000] text-[2.2rem]">Products on Cart</p>
         <div class="flex flex-row gap-2">
-            <div class="flex flex-col flex-1 grid gap-3 grid-cols-2">
+            <div class="flex flex-col flex-1 gap-3 grid-cols-2">
                 <div *ngFor="let cart of carts" class="flex flex-row border-2">
                     <img class="w-[100px]" [src]="cart.product_image">
                     <div class="flex flex-col px-3 py-2 flex-1">
@@ -50,22 +48,64 @@
                 </div>
             </div>
 
-            <footer class="fixed bottom-0 w-full bg-white h-[60px] flex items-center border-t-2">
-                <p class="text-[1rem] font-bold px-3 py-2 text-[#6437A0]">Products on Cart: {{ carts.length }}</p>
-                <p class="text-[1rem] font-bold px-3 py-2 text-[#6437A0]">Total: ₱{{ total }}</p>
-            </footer>
+            <div class="w-[320px] border-2 p-3">
+                <p class="font-Sofia text-[0.9rem] opacity-80">Location</p>
+
+                <hr class="my-2">
+
+                <p class="font-Sofia font-black text-[1.2rem]">Order Summary</p>
+                <div class="flex flex-row justify-between items-center">
+                    <p class="text-[0.9rem] opacity-80">Subtotal ({{ carts.length }} items)</p>
+                    <p class="text-[0.9rem]">₱{{ total }}</p>
+                </div>
+
+                <div class="flex flex-row justify-between items-center">
+                    <p class="text-[0.9rem] opacity-80">Shipping Fee</p>
+                    <p class="text-[0.9rem]">₱{{shippingFee}}</p>
+                </div>
+
+                <hr class="my-2">
+
+                <div class="flex flex-row justify-between items-center">
+                    <p class="text-[0.9rem]">Total</p>
+                    <p class="text-[1.2rem] text-[#6437A0]">₱{{ total + shippingFee}}</p>
+                </div>
+            </div>
         </div>
     </div>
 }
 
 @else {
     <div class="flex flex-col w-full min-h-full">
-        <app-topnav></app-topnav>
+        <app-topnav (toggleCart)="toggleCart()"></app-topnav>
 
         <div class="p-10 px-[110px]">
             <div class=" grid">
-                <div class="w-full flex flex-row justify-between items-center select-none">
-                    <p class="font-Sofia font-[1000] text-[2.2rem]">Categories</p>
+                <div class="w-full flex flex-col justify-center select-none">
+                    <div class="flex flex-row items-center justify-between mb-2">
+                        <p class="font-Sofia font-[1000] text-[2.2rem]">Rainy Day Sale</p>
+                        <div class="w-[400px] rounded-[15px] bg-[#6437A0] font-Sofia font-bold text-[1.5rem] text-white p-1 text-center">
+                            {{countdown}}
+                        </div>
+                    </div>
+
+                    <div class="flex flex-row gap-3">
+                        <div
+                        class="grid-cols-4 grid gap-3 w-full h-[400px] overflow-auto"
+                        >
+                            <div
+                                *ngFor="let prod of product"
+                                (click)="openDialog(prod)"
+                                class="flex flex-col h-[240px] mb-5 relative rounded-[5px] bg-white overflow-hidden border-2 duration-300 hover:duration-300 hover:shadow-main p-2"
+                            >
+                                <img [src]="prod.product_image" class="h-[140px] rounded-[5px] object-cover mb-2">
+                                <div class="text-[0.9rem] font-[300] line-clamp-2">{{ prod.product_name }}</div>
+                                <div class="text-[1.0rem] font-medium  mt-auto">PHP {{ prod.product_price }}</div>
+
+                                                    
+                            </div>
+                        </div>
+                    </div>
     
                 </div>
                 <div
@@ -77,14 +117,6 @@
             <div class=" grid">
                 <div class="w-full flex flex-row justify-between items-center select-none">
                     <p class="font-Sofia font-[1000] text-[2.2rem]">Just For You</p>
-                    <div (click)="isCart = !isCart" class="rounded-[100px] bg-[#6437A0] p-2 px-3">
-                        @if(carts.length < 1){
-                            <p class="font-Sofia font-bold text-[1rem] text-white cursor-pointer">Check Cart</p>
-                        }
-                        @else {
-                            <p class="font-Sofia font-bold text-[1rem] text-white cursor-pointer">Check Cart ({{ carts.length }})</p>
-                        }
-                    </div>
                 </div>
                 <div
                 class="mobileS:grid-cols-6 tablet:grid-cols-5 grid gap-3 w-full"
@@ -92,11 +124,35 @@
                     <div
                         *ngFor="let prod of product"
                         (click)="openDialog(prod)"
-                        class="flex flex-col h-[290px] mb-5 relative rounded-[5px] bg-white overflow-hidden border-2 duration-300 hover:duration-300 hover:shadow-main p-2"
+                        class="flex flex-col h-[320px] mb-5 relative rounded-[5px] bg-white overflow-hidden border-2 duration-300 hover:duration-300 hover:shadow-main p-2"
                     >
                         <img [src]="prod.product_image" class="h-[180px] rounded-[5px] object-cover mb-2">
                         <div class="text-[0.9rem] font-[300] line-clamp-2">{{ prod.product_name }}</div>
-                        <div class="text-[1.0rem] font-medium  mt-auto">PHP {{ prod.product_price }}</div>
+                        <div class="text-[1.0rem] font-medium  mt-auto">PHP {{ prod.product_price | number }}</div>
+
+                        <div class="flex flex-row items-center">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5.825 21L7.45 13.975L2 9.25L9.2 8.625L12 2L14.8 8.625L22 9.25L16.55 13.975L18.175 21L12 17.275L5.825 21Z" fill="#6437A0"/>
+                            </svg>
+
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5.825 21L7.45 13.975L2 9.25L9.2 8.625L12 2L14.8 8.625L22 9.25L16.55 13.975L18.175 21L12 17.275L5.825 21Z" fill="#6437A0"/>
+                            </svg>
+
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5.825 21L7.45 13.975L2 9.25L9.2 8.625L12 2L14.8 8.625L22 9.25L16.55 13.975L18.175 21L12 17.275L5.825 21Z" fill="#6437A0"/>
+                            </svg>
+
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5.825 21L7.45 13.975L2 9.25L9.2 8.625L12 2L14.8 8.625L22 9.25L16.55 13.975L18.175 21L12 17.275L5.825 21Z" fill="#6437A0"/>
+                            </svg>
+
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M5.825 21L7.45 13.975L2 9.25L9.2 8.625L12 2L14.8 8.625L22 9.25L16.55 13.975L18.175 21L12 17.275L5.825 21Z" fill="#6437A0"/>
+                            </svg>
+
+                            <p class="ml-2 text-[0.9rem]">{{ prod.product_rating }}</p>
+                        </div>
                     </div>
                 </div>
             </div>

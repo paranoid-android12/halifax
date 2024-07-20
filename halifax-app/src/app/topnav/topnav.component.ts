@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { TokenService } from '../services/authentication/token.service';
 
@@ -14,6 +14,7 @@ interface JwtPayload{
   styleUrl: './topnav.component.css'
 })
 export class TopnavComponent {
+  @Output() toggleCart = new EventEmitter<void>();
   userDrop = false;
   userName = '';
 
@@ -23,6 +24,14 @@ export class TopnavComponent {
   ){
     const decoded = this.tokenService.decodeToken() as JwtPayload;
     this.userName = decoded.data.username;
+  }
+
+  toggle(){
+    this.toggleCart.emit();
+  }
+
+  home(){
+    this.routers.navigate(['browse']);
   }
 
   logout(){
