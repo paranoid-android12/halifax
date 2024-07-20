@@ -1,7 +1,4 @@
-<div class="bg-white h-[60px] overscroll-none justify-between items-center py-2 px-6 flex flex-row border-b-2 border-[#E8E8E8]">
-   <p class="font-Sofia font-[1000] text-[1.4rem]">Halifax</p>
-</div>
-<div class=" actual-background bg-custom-dark flex flex-col md:flex-row w-full h-full">
+<div class=" actual-background bg-[#161616] flex flex-col md:flex-row w-full h-full">
     <div class="flex div1 md:min-w-[60%] h-2/5 md:h-full justify-center items-center ">
         <div class="flex flex-col justify-center  h-full">
             <h1 class="text-2xl md:text-3xl lg:text-8xl font-black">Halifax</h1>
@@ -9,58 +6,71 @@
         </div>
     </div>
 
-    <div class="flex flex-col justify-center div2 md:min-w-[40%] h-3/5 md:h-full md:bg-custom-dark bg-white "> 
-        <div class="pt-5 md:bg-white lg:pt-10 rounded-lg">
+    <div class="flex flex-col justify-center div2 md:min-w-[40%] h-3/5 md:h-full md:bg-[#161616]"> 
+        <div class="p-5 py-10 md:bg-white lg:pt-1 rounded-lg">
+            <h2 class="lg:text-4xl text-2xl font-extrabold font-Sofia md:mb-5 mt-2 text-center" style="color: #6437A0;" >{{ isSignInActive ? 'Welcome Back' : 'Create an Account' }}</h2>
+                            
+            <a (click)="toggleForm()" class="cursor-pointer inline-block align-baseline Sofia font-bold text-xs lg:text-sm hover:text-indigo-800 mb-1 md:mb-4">
+                {{ isSignInActive ? 'Don’t have an account? Sign up' : 'Already have an account? Sign in' }}
+            </a>
 
-            <div class="container p-4">
-                <h2 class="lg:text-4xl text-2xl font-bold font-Sofia md:mb-5 mt-2" style="color: #6437A0;" >{{ isSignInActive ? 'Welcome Back' : 'Create an Account' }}</h2>
-                              
-                <a (click)="toggleForm()" class="inline-block align-baseline Sofia font-bold text-xs lg:text-sm hover:text-indigo-800 mb-1 md:mb-4">
-                    {{ isSignInActive ? 'Don’t have an account? Sign up' : 'Already have an account? Sign in' }}
-                </a>
+            <form [formGroup]="form" (ngSubmit)="onLogin()">
+                <div *ngIf="!isSignInActive" class="mb-4">
+                    <label for="username" class="block text-sm font-medium text-gray-700">Username:</label>
+                    <input type="text" formControlName="username" id="username" class="mt-1 block w-full px-3 py-2 bg-white border-b border-gray-300 focus:border-indigo-500 focus:ring-0">
+                </div>
 
-                <form [formGroup]="form" (ngSubmit)="onLogin()">
-                    <div *ngIf="!isSignInActive" class="mb-4">
-                      <label for="username" class="block text-sm font-medium text-gray-700">Username:</label>
-                      <input type="text" formControlName="username" id="username" class="mt-1 block w-full px-3 py-2 bg-white border-b border-gray-300 focus:border-indigo-500 focus:ring-0">
-                    </div>
+                <div class="mb-4">
+                    <label for="email" class="block text-sm font-medium text-gray-700">
+                        {{ isSignInActive ? 'Email or Username:' : 'Email:' }}
+                    </label>
+                    <input [attr.type]="isSignInActive ? 'text' : 'email'" formControlName="email" id="email" class="outline-none mt-1 block w-full px-3 py-2 bg-white border-b border-gray-300 focus:border-indigo-500 focus:ring-0">
+                </div>
 
-                    <div class="mb-4">
-                        <label for="email" class="block text-sm font-medium text-gray-700">
-                          {{ isSignInActive ? 'Email or Username:' : 'Email:' }}
-                        </label>
-                        <input [attr.type]="isSignInActive ? 'text' : 'email'" formControlName="email" id="email" class="mt-1 block w-full px-3 py-2 bg-white border-b border-gray-300 focus:border-indigo-500 focus:ring-0">
-                    </div>
-
-                    <div class="mb-6">
-                      <label for="password" class="block text-sm font-medium text-gray-700">Password:</label>
-                      <input formControlName="password" type="password" id="password" class="mt-1 block w-full px-3 py-2 bg-white border-b border-gray-300 focus:border-indigo-500 focus:ring-0">
-                    </div>
-
-                    <div *ngIf="errorMessage" class="mb-4">
-                        <p class="text-sm font-medium text-red-600">{{ errorMessage }}</p>
-                    </div>
-
-                   <div class="flex justify-end">
-                    <button type="submit" style="background-color: #6437A0;" class="rounded-lg flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">{{ isSignInActive ? 'Sign In' : 'Sign Up' }}</button>
-                   </div>
+                <div class="mb-6">
+                    <label for="password" class="block text-sm font-medium text-gray-700">Password:</label>
+                    <div class="flex flex-row items-center">
+                        <input [attr.type]="isShow ? 'text' : 'password'" formControlName="password" type="password" id="password" class="outline-none mt-1 block w-full px-3 py-2 bg-white border-b border-gray-300 focus:border-indigo-500 focus:ring-0">
                     
-                </form>
-
-                <div class="flex items-center justify-center md:mt-5">
-                    <div class="flex-grow">
-                        <hr class="border">
-                    </div>
-                    <h2 class="lg:text-xl font-bold text-center px-3 mb-2">Or Sign Up/Sign In With</h2>
-                    <div class="flex-grow">
-                        <hr class="border">
+                    @if(!isShow){
+                        <svg (click)="isShow = !isShow" width="23" height="23" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 17.5C8.2 17.5 4.8 15.4 3.2 12H1C2.7 16.4 7 19.5 12 19.5C17 19.5 21.3 16.4 23 12H20.8C19.2 15.4 15.8 17.5 12 17.5Z" fill="#6437A0"/>
+                        </svg>
+                            
+                    }
+                    @else {
+                        <svg (click)="isShow = !isShow" width="23" height="23" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M247.31 124.76C246.96 123.97 238.49 105.18 219.66 86.35C194.57 61.26 162.88 48 128 48C93.1199 48 61.4299 61.26 36.3399 86.35C17.5099 105.18 8.9999 124 8.6899 124.76C8.23504 125.783 8 126.89 8 128.01C8 129.13 8.23504 130.237 8.6899 131.26C9.0399 132.05 17.5099 150.83 36.3399 169.66C61.4299 194.74 93.1199 208 128 208C162.88 208 194.57 194.74 219.66 169.66C238.49 150.83 246.96 132.05 247.31 131.26C247.765 130.237 248 129.13 248 128.01C248 126.89 247.765 125.783 247.31 124.76ZM128 192C97.2199 192 70.3299 180.81 48.0699 158.75C38.9367 149.667 31.1661 139.309 24.9999 128C31.1638 116.689 38.9346 106.331 48.0699 97.25C70.3299 75.19 97.2199 64 128 64C158.78 64 185.67 75.19 207.93 97.25C217.081 106.33 224.868 116.687 231.05 128C223.84 141.46 192.43 192 128 192ZM128 80C118.506 80 109.226 82.8152 101.333 88.0895C93.439 93.3638 87.2867 100.86 83.6537 109.631C80.0207 118.402 79.0701 128.053 80.9222 137.364C82.7743 146.675 87.3459 155.228 94.0588 161.941C100.772 168.654 109.324 173.226 118.636 175.078C127.947 176.93 137.598 175.979 146.369 172.346C155.14 168.713 162.636 162.561 167.91 154.667C173.185 146.774 176 137.494 176 128C175.987 115.274 170.925 103.072 161.926 94.0735C152.928 85.0746 140.726 80.0132 128 80ZM128 160C121.671 160 115.484 158.123 110.222 154.607C104.959 151.091 100.858 146.093 98.4358 140.246C96.0138 134.399 95.38 127.965 96.6148 121.757C97.8495 115.55 100.897 109.848 105.372 105.373C109.848 100.897 115.55 97.8496 121.757 96.6149C127.964 95.3801 134.399 96.0138 140.246 98.4359C146.093 100.858 151.091 104.959 154.607 110.222C158.123 115.484 160 121.671 160 128C160 136.487 156.628 144.626 150.627 150.627C144.626 156.629 136.487 160 128 160Z" fill="#6437A0"/>
+                        </svg>
+                    }
+                        
                     </div>
                 </div>
-                <div class="flex justify-center items-center lg:mt-5">
-                    <div id="google-btn"></div>
+
+                <div *ngIf="errorMessage" class="mb-4">
+                    <p class="text-sm font-medium text-red-600">{{ errorMessage }}</p>
                 </div>
 
+                <div class="flex justify-end">
+                <button type="submit" style="background-color: #6437A0;" class="rounded-lg flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">{{ isSignInActive ? 'Sign In' : 'Sign Up' }}</button>
+                </div>
+                
+            </form>
+
+            <div class="flex items-center justify-center md:mt-5">
+                <div class="flex-grow">
+                    <hr class="border">
+                </div>
+                <h2 class="lg:text-[0.8rem] font-bold text-center px-3 mb-2">Or Sign Up/Sign In With</h2>
+                <div class="flex-grow">
+                    <hr class="border">
+                </div>
             </div>
+            <div class="flex justify-center items-center lg:mt-5">
+                <div id="google-btn"></div>
+            </div>
+
+
             
         </div>
     </div>

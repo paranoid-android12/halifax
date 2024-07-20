@@ -8,6 +8,7 @@ import { Cart } from '../services/cart';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import { TokenService } from '../services/authentication/token.service';
 import { Router } from '@angular/router';
+import { TopnavComponent } from "../topnav/topnav.component";
 
 interface JwtPayload{
   data: any
@@ -16,7 +17,7 @@ interface JwtPayload{
 @Component({
   selector: 'app-browse',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, TopnavComponent],
   templateUrl: './browse.component.html',
   styleUrl: './browse.component.css'
 })

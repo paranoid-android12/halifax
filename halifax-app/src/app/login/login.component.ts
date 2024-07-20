@@ -14,6 +14,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { TokenService } from '../services/authentication/token.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-login',
@@ -32,8 +33,9 @@ export class LoginComponent {
   private subscriptions = new Subscription();
   isSignInActive: boolean = true;
   googleLogin: boolean = false;
+  isShow: boolean = false;
 
-  constructor(private loginService: LoginService, private authService: AuthService, private tokenService: TokenService, private titleService: Title, private formBuilder: FormBuilder, private routers: Router, private dataService: DataService) {
+  constructor(private _snackBar: MatSnackBar, private loginService: LoginService, private authService: AuthService, private tokenService: TokenService, private titleService: Title, private formBuilder: FormBuilder, private routers: Router, private dataService: DataService) {
     this.tokenService.flushToken();
     this.form = new FormGroup({
       email: new FormControl('', [Validators.required]),
@@ -105,6 +107,7 @@ export class LoginComponent {
   }
 
   onLogin() {
+    console.log("yeet");
     this.isLoading = true;
     let endpoint = 'registerUser';
     if(this.isSignInActive) {
@@ -114,12 +117,15 @@ export class LoginComponent {
     if(this.googleLogin) {
       endpoint = 'google-login';
     }
-
+    if(endpoint == 'registerUser'){
+      this._snackBar.open("Account has been successfully registered.", 'Undo', {duration: 1500});
+    }
     console.log(this.form.value);
     this.dataService.login(this.form, endpoint).subscribe({
       next: (next:any) => {
         console.log(next);
         if(next.code === 200){
+
           this.setTokenInCookie(next.token);
           this.loginService.LoggedIn();
           this.routers.navigate(['/browse']);
