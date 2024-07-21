@@ -9,6 +9,8 @@ import {MatSnackBar} from '@angular/material/snack-bar';
 import { TokenService } from '../services/authentication/token.service';
 import { Router } from '@angular/router';
 import { TopnavComponent } from "../topnav/topnav.component";
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { FormsModule } from '@angular/forms';
 
 interface JwtPayload{
   data: any
@@ -17,20 +19,23 @@ interface JwtPayload{
 @Component({
   selector: 'app-browse',
   standalone: true,
-  imports: [CommonModule, TopnavComponent],
+  imports: [CommonModule, TopnavComponent, MatCheckboxModule, FormsModule],
   templateUrl: './browse.component.html',
   styleUrl: './browse.component.css'
 })
 export class BrowseComponent {
   product: Product[] = []
+  rainyProduct: Product[] = []
   carts: Cart[] = []
+  selectedLength: number = 0;
   total: number = -1;
-  isCart = true;
+  isCart = false;
   userDrop = false;
   userName = '';
   countdown: string = '';
   intervalId: number = -1;
   shippingFee: number = 78;
+  checkAll: boolean = false;
 
   constructor(
     private dataService: DataService,
@@ -40,7 +45,11 @@ export class BrowseComponent {
     private routers: Router
   ){
     this.dataService.fetchData("getProduct").subscribe({
-      next: (next: any) => {this.product = next;this.calculateTotal();},
+      next: (next: any) => {
+        this.product = this.shuffleArray(next);
+        this.rainyProduct = this.product.filter(product => product.product_category.split(',').includes('rainy'));
+        this.calculateTotal();
+      },
       error: (error: any) => {console.log(error)},
       complete: () => {console.log(this.product);}
     });
@@ -53,6 +62,15 @@ export class BrowseComponent {
 
 
   }
+
+  //I hate every single moment i spent on this projects
+  shuffleArray(array: any[]): any[] {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+    }
+    return array;
+}
 
   startCountdown(): void {
     const endTime = new Date();
@@ -83,13 +101,70 @@ export class BrowseComponent {
 
   calculateTotal(){
     this.total = 0;
+    this.selectedLength = this.carts.filter(cart => cart.selected).length;
     this.carts.forEach(cart => {
-      this.total = this.total + cart.product_price * cart.quantity;
+      if(cart.selected){
+        this.total = this.total + cart.product_price * cart.quantity;
+      }
     })
   }
 
-  toggleCart(){
-    this.isCart = !this.isCart;
+  toggleCart(event: any){
+    this.isCart = event;
+    this.total = 0;
+  }
+
+  updateCheckAllState(): void {
+    const allChecked = this.carts.every(cart => 
+      cart.selected === true
+    );
+    this.checkAll = allChecked;
+  }
+
+  onSelect(event: any, cart: Cart): void {
+    //Turn off maincheck
+    // const existAlready = this.selectedCart.some(selected => selected.product_ID === cart.product_ID);
+    // console.log(existAlready);
+    if(event.checked){
+      console.log("Pushing selected cart...")
+      for (let i = 0; i < this.carts.length; i++) {
+        if(this.carts[i].cart_ID === cart.cart_ID){
+          this.carts[i].selected = true;
+        }
+        
+      }
+    }
+    else{
+      console.log('Unchecking supposedy state:', event.checked);
+
+      for (let i = 0; i < this.carts.length; i++) {
+        if(this.carts[i].cart_ID === cart.cart_ID){
+          this.carts[i].selected = false;
+        }
+      }
+    }
+    console.log(this.carts);
+    this.calculateTotal();
+    this.updateCheckAllState();
+    // You can now use isChecked to perform further actions based on the checkbox state
+  }
+
+  selectAll(event: any): void {
+    console.log(event.checked);
+    if(event.checked){
+      // let ele = document.getElementsByName('cartCheck');
+      // ele.forEach(e => {
+      //   const inputElement = e as HTMLInputElement;
+      //   inputElement.checked = true;
+      // });
+      this.carts.forEach(cart => cart.selected = true);
+      this.checkAll = true;
+    }
+    else{
+      this.carts.forEach(cart => cart.selected = false);
+    }
+    console.log(this.carts);
+    this.calculateTotal();
   }
 
   fetchCart(){
@@ -127,14 +202,26 @@ export class BrowseComponent {
 
   incrementValue(cart: Cart){
     this.dataService.patchData({cart_ID: cart.cart_ID, quantity: cart.quantity + 1}, "addQuantity").subscribe({
-      next: () => {this.fetchCart();}
+      next: () => {
+        this.carts.forEach(c => {
+          if(c.cart_ID === cart.cart_ID){
+            c.quantity = c.quantity + 1;
+          }
+        });
+      }
     })
   }
 
   decrementValue(cart: Cart){
     if(cart.quantity < 1) return;
     this.dataService.patchData({cart_ID: cart.cart_ID, quantity: cart.quantity - 1}, "addQuantity").subscribe({
-      next: () => {this.fetchCart();}
+      next: () => {
+        this.carts.forEach(c => {
+          if(c.cart_ID === cart.cart_ID){
+            c.quantity = c.quantity - 1;
+          }
+        });
+      }
     })
   }
 

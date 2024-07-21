@@ -1,8 +1,7 @@
 
-
+<app-topnav (toggleCart)="toggleCart($event)"></app-topnav>
 
 @if(isCart){
-    <app-topnav (toggleCart)="toggleCart()"></app-topnav>
     <div class="p-10 px-[150px] grid select-none">
         <!-- <div (click)="isCart = !isCart" class="rounded-[50%] w-[50px] h-[50px] bg-white flex justify-center items-center shadow-main">
             <svg width="30" height="30" viewBox="0 0 51 51" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -14,8 +13,15 @@
         <p class="font-Sofia font-[1000] text-[2.2rem]">Products on Cart</p>
         <div class="flex flex-row gap-2">
             <div class="flex flex-col flex-1 gap-3 grid-cols-2">
+                <div class="border-2 flex flex-row items-center">
+                    <mat-checkbox [(ngModel)]="checkAll" id="mainCheck" name="mainCheck" (change)="selectAll($event)"> </mat-checkbox>
+                    <p class="text-[0.85rem] opacity-80">Select All Items ({{carts.length}} item(s))</p>
+                </div>
                 <div *ngFor="let cart of carts" class="flex flex-row border-2">
-                    <img class="w-[100px]" [src]="cart.product_image">
+                    <mat-checkbox [(ngModel)]="cart.selected" name="cartCheck" (change)="onSelect($event, cart)"></mat-checkbox>
+                    <div class="w-[110px] h-full flex justify-center items-center">
+                        <img class="object-cover" [src]="cart.product_image">
+                    </div>
                     <div class="flex flex-col px-3 py-2 flex-1">
                         <div class="flex flex-row justify-between">
                             <p class="w-[90%]">{{ cart.product_name }}</p>
@@ -55,7 +61,7 @@
 
                 <p class="font-Sofia font-black text-[1.2rem]">Order Summary</p>
                 <div class="flex flex-row justify-between items-center">
-                    <p class="text-[0.9rem] opacity-80">Subtotal ({{ carts.length }} items)</p>
+                    <p class="text-[0.9rem] opacity-80">Subtotal ({{ selectedLength }} items)</p>
                     <p class="text-[0.9rem]">₱{{ total }}</p>
                 </div>
 
@@ -77,11 +83,9 @@
 
 @else {
     <div class="flex flex-col w-full min-h-full">
-        <app-topnav (toggleCart)="toggleCart()"></app-topnav>
-
         <div class="p-10 px-[110px]">
             <div class=" grid">
-                <div class="w-full flex flex-col justify-center select-none">
+                <div class="w-full flex flex-col justify-center select-none overflow-x-hidden">
                     <div class="flex flex-row items-center justify-between mb-2">
                         <p class="font-Sofia font-[1000] text-[2.2rem]">Rainy Day Sale</p>
                         <div class="w-[400px] rounded-[15px] bg-[#6437A0] font-Sofia font-bold text-[1.5rem] text-white p-1 text-center">
@@ -89,20 +93,73 @@
                         </div>
                     </div>
 
-                    <div class="flex flex-row gap-3">
+                    <div class="flex flex-row gap-3 overflow-x-scroll">
                         <div
-                        class="grid-cols-4 grid gap-3 w-full h-[400px] overflow-auto"
+                        class="flex flex-row gap-3"
                         >
-                            <div
-                                *ngFor="let prod of product"
+                            <div  
+                            *ngFor="let prod of rainyProduct"
                                 (click)="openDialog(prod)"
-                                class="flex flex-col h-[240px] mb-5 relative rounded-[5px] bg-white overflow-hidden border-2 duration-300 hover:duration-300 hover:shadow-main p-2"
+                                class="flex flex-col w-[190px] h-[240px] mb-5 relative rounded-[5px] bg-white border-2 duration-300 hover:duration-300 hover:shadow-main p-2"
                             >
                                 <img [src]="prod.product_image" class="h-[140px] rounded-[5px] object-cover mb-2">
                                 <div class="text-[0.9rem] font-[300] line-clamp-2">{{ prod.product_name }}</div>
-                                <div class="text-[1.0rem] font-medium  mt-auto">PHP {{ prod.product_price }}</div>
+                                <div class="text-[1.0rem] font-medium  mt-auto">PHP {{ prod.product_price }}</div>                
+                            </div>
+                        </div>
+                    </div>
+    
+                </div>
+                <div
+                class="mobileS:grid-cols-6 tablet:grid-cols-6 laptop:grid-cols-6 grid gap-3 w-full"
+                >
+                </div>
+            </div>
 
-                                                    
+            <div class=" grid">
+                <div class="w-full flex flex-col justify-center select-none">
+                    <div class="flex flex-row items-center justify-between mb-2">
+                        <p class="font-Sofia font-[1000] text-[2.2rem]">Featured Categories</p>
+                    </div>
+
+                    <div class="flex flex-row items-center justify-between">
+                        <div class="duration-300 hover:duration-300 hover:shadow-main relative rounded-[15px] w-[210px] h-[210px] bg-red-200 overflow-hidden">
+                            <img class="absolute inset-0 w-full h-full object-cover" src="/assets/electronics.png">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
+                            <div class="absolute bottom-0 left-0 p-4">
+                                <p class="text-white text-[1.2rem] font-medium">Electronics</p>
+                            </div>
+                        </div>
+
+                        <div class="duration-300 hover:duration-300 hover:shadow-main relative rounded-[15px] w-[210px] h-[210px] bg-red-200 overflow-hidden">
+                            <img class="absolute inset-0 w-full h-full object-cover" src="/assets/apparel.png">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
+                            <div class="absolute bottom-0 left-0 p-4">
+                                <p class="text-white text-[1.2rem] font-medium">Apparel</p>
+                            </div>
+                        </div>
+
+                        <div class="duration-300 hover:duration-300 hover:shadow-main relative rounded-[15px] w-[210px] h-[210px] bg-red-200 overflow-hidden">
+                            <img class="absolute inset-0 w-full h-full object-cover" src="/assets/appliances.png">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
+                            <div class="absolute bottom-0 left-0 p-4">
+                                <p class="text-white text-[1.2rem] font-medium">Appliances</p>
+                            </div>
+                        </div>
+
+                        <div class="duration-300 hover:duration-300 hover:shadow-main relative rounded-[15px] w-[210px] h-[210px] bg-red-200 overflow-hidden">
+                            <img class="absolute inset-0 w-full h-full object-cover" src="/assets/gaming.png">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
+                            <div class="absolute bottom-0 left-0 p-4">
+                                <p class="text-white text-[1.2rem] font-medium">Gaming</p>
+                            </div>
+                        </div>
+
+                        <div class="duration-300 hover:duration-300 hover:shadow-main relative rounded-[15px] w-[210px] h-[210px] bg-red-200 overflow-hidden">
+                            <img class="absolute inset-0 w-full h-full object-cover" src="/assets/miscellaneous.png">
+                            <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
+                            <div class="absolute bottom-0 left-0 p-4">
+                                <p class="text-white text-[1.2rem] font-medium">Miscellaneous</p>
                             </div>
                         </div>
                     </div>

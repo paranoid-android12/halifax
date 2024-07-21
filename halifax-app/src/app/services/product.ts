@@ -6,5 +6,7 @@ export interface Product {
     product_discount: number,
     product_rating: number,
     product_image: string,
+    product_category: string,
     inCart: boolean
+
 }
