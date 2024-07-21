@@ -56,8 +56,8 @@ export class TokenService {
   }
 
   userIDToken(decodedToken: any): number {
-    if (decodedToken && decodedToken.data && decodedToken.data.user) {    
-      return decodedToken.data.user;
+    if (decodedToken && decodedToken.data) {    
+      return decodedToken.data.userID;
     } else {
       return 0;
     }
