@@ -1,0 +1,27 @@
+<div
+  class="gap-3 h-auto w-[500px] rounded-[5px] w-max-[80vw] h-max-[80vh] shadow-lg opacity-100 flex flex-col p-5"
+>
+    <p class="font-Sofia font-black text-[1.5rem]">
+        Thanks for Your Order!
+    </p>
+
+    <p class="font-Sofia text-[1.3rem] font-semibold">Order Summary</p>
+    <hr>
+    <div class="w-full flex flex-row items-center justify-between">
+        <p class="font-Sofia font-medium text-[1.2] text-black">Subtotal</p>
+        <p class="font-Sofia font-medium text-[1.2] text-black">PHP{{data.total}}</p>
+    </div>
+
+    <div class="w-full flex flex-row items-center justify-between">
+        <p class="font-Sofia font-medium text-[1.2] text-black">Shipping Fee</p>
+        <p class="font-Sofia font-medium text-[1.2] text-black">PHP79</p>
+    </div>
+
+    <hr>
+
+    <div class="w-full flex flex-row items-center justify-between">
+        <p class="font-Sofia font-medium text-[1.2] text-black">Total</p>
+        <p class="font-Sofia font-medium text-[1.2] text-black">PHP{{data.total + 79}}</p>
+    </div>
+
+</div>

@@ -11,6 +11,8 @@ import { Router } from '@angular/router';
 import { TopnavComponent } from "../topnav/topnav.component";
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CheckoutDialogComponent } from './checkout-dialog/checkout-dialog.component';
+import { fakeAsync } from '@angular/core/testing';
 
 interface JwtPayload{
   data: any
@@ -227,12 +229,25 @@ export class BrowseComponent {
     })
   }
 
+  openCheckout(){
+    this.dialog.open(CheckoutDialogComponent, {
+      data: {
+        form: this.shippingForm,
+        total: this.total,
+      }
+    }).afterClosed().subscribe(() => {  
+      this.isCart = false;
+      this.isCheckout = false;
+    })
+  }
+
   incrementValue(cart: Cart){
     this.dataService.patchData({cart_ID: cart.cart_ID, quantity: cart.quantity + 1}, "addQuantity").subscribe({
       next: () => {
         this.carts.forEach(c => {
           if(c.cart_ID === cart.cart_ID){
             c.quantity = c.quantity + 1;
+            this.calculateTotal();
           }
         });
       }
@@ -246,6 +261,7 @@ export class BrowseComponent {
         this.carts.forEach(c => {
           if(c.cart_ID === cart.cart_ID){
             c.quantity = c.quantity - 1;
+            this.calculateTotal();
           }
         });
       }

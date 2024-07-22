@@ -1,4 +1,4 @@
-<app-topnav (toggleCart)="toggleCart($event)" (toggleFilter)="triggerFilter($event)"></app-topnav>
+<app-topnav [cartLength]="carts.length" (toggleCart)="toggleCart($event)" (toggleFilter)="triggerFilter($event)"></app-topnav>
 
 @if(isCart){
     <form (ngSubmit)="checkout()" [formGroup]="shippingForm" class="p-10 px-[250px] grid select-none">
@@ -59,14 +59,14 @@
                     </div>
                 </div>
             }
-            @else {
+            @else if (!isCheckout) {
                 <div class="flex flex-col flex-1 gap-3 grid-cols-2">
                     <div class="border-2 flex flex-row items-center">
-                        <mat-checkbox [(ngModel)]="checkAll" id="mainCheck" name="mainCheck" (change)="selectAll($event)"> </mat-checkbox>
+                        <mat-checkbox [(ngModel)]="checkAll" [ngModelOptions]="{standalone: true}" id="mainCheck" name="mainCheck" (change)="selectAll($event)"> </mat-checkbox>
                         <p class="text-[0.85rem] opacity-80">Select All Items ({{carts.length}} item(s))</p>
                     </div>
                     <div *ngFor="let cart of carts" class="flex flex-row border-2">
-                        <mat-checkbox [(ngModel)]="cart.selected" name="cartCheck" (change)="onSelect($event, cart)"></mat-checkbox>
+                        <mat-checkbox [(ngModel)]="cart.selected" [ngModelOptions]="{standalone: true}" name="cartCheck" (change)="onSelect($event, cart)"></mat-checkbox>
                         <div class="w-[110px] h-full flex justify-center items-center">
                             <img class="object-cover" [src]="cart.product_image">
                         </div>
@@ -113,7 +113,7 @@
                     <p class="font-Sofia font-black text-[1.2rem]">Order Summary</p>
                     <div class="flex flex-row justify-between items-center">
                         <p class="text-[0.9rem] opacity-80">Subtotal ({{ selectedLength }} items)</p>
-                        <p class="text-[0.9rem]">₱{{ total }}</p>
+                        <p class="text-[0.9rem]">₱{{ total | number }}</p>
                     </div>
     
                     <div class="flex flex-row justify-between items-center">
@@ -125,13 +125,13 @@
     
                     <div class="flex flex-row justify-between items-center">
                         <p class="text-[0.9rem]">Total</p>
-                        <p class="text-[1.2rem] text-[#6437A0]">₱{{ total + shippingFee}}</p>
+                        <p class="text-[1.2rem] text-[#6437A0]">₱{{ total + shippingFee | number}}</p>
                     </div>
                 </div>
 
 
                 @if(isCheckout){
-                    <div (click)="checkout()" class="border-2 bg-[#6437A0] duration-300 hover:duration-300 hover:shadow-main rounded-[5px] p-2">
+                    <div (click)="openCheckout()" class="border-2 bg-[#6437A0] duration-300 hover:duration-300 hover:shadow-main rounded-[5px] p-2">
                         <p class="font-Sofia text-white text-center">Confirm Checkout</p>
                     </div>
                 }

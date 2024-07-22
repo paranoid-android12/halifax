@@ -67,6 +67,10 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 echo json_encode($tunnel->toIncrementCart($data));
                 break;
 
+            case 'addProduct':
+                echo json_encode($tunnel->toAddProduct($data));
+                break;
+
             default:
                 http_response_code(403);
                 break;
@@ -81,6 +85,10 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 echo json_encode($tunnel->toQuantity($data));
                 break;
 
+            case 'editProduct':
+                echo json_encode($tunnel->toEditProduct($data));
+                break;
+
             default:
                 http_response_code(403);
                 break;
@@ -93,6 +101,10 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 $ver = $globalOb->verifyToken();
                 $id = $_GET['id'];
                 echo json_encode($tunnel->toDeleteCart($id));
+                break;
+
+            case 'deleteProduct':
+                echo json_encode($tunnel->toDeleteProduct($request[1]));
                 break;
 
             default:

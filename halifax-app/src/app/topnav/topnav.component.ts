@@ -14,6 +14,7 @@ interface JwtPayload{
   styleUrl: './topnav.component.css'
 })
 export class TopnavComponent {
+  @Input () cartLength: number = 0;
   @Output() toggleCart = new EventEmitter<boolean>();
   @Output() toggleFilter = new EventEmitter<string>();
   userDrop = false;

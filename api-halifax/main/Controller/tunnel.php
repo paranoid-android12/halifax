@@ -22,6 +22,18 @@ class Tunnel extends GlobalMethods{
         return $this->login->loginValidate($data);
     }
 
+    public function toAddProduct($data){
+        return $this->product->addProduct($data);
+    }
+
+    public function toEditProduct($data){
+        return $this->product->editProduct($data);
+    }
+
+    public function toDeleteProduct($id){
+        return $this->product->deleteProduct($id);
+    }
+
     public function toRegister($data){
         return $this->login->registerValidate($data);
     }
