@@ -1,80 +1,230 @@
-
-<app-topnav (toggleCart)="toggleCart($event)"></app-topnav>
+<app-topnav (toggleCart)="toggleCart($event)" (toggleFilter)="triggerFilter($event)"></app-topnav>
 
 @if(isCart){
-    <div class="p-10 px-[150px] grid select-none">
-        <!-- <div (click)="isCart = !isCart" class="rounded-[50%] w-[50px] h-[50px] bg-white flex justify-center items-center shadow-main">
-            <svg width="30" height="30" viewBox="0 0 51 51" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M11.1562 23.9062H43.0312C43.4539 23.9062 43.8593 24.0742 44.1582 24.373C44.4571 24.6719 44.625 25.0773 44.625 25.5C44.625 25.9227 44.4571 26.3281 44.1582 26.627C43.8593 26.9258 43.4539 27.0938 43.0312 27.0938H11.1562C10.7336 27.0938 10.3282 26.9258 10.0293 26.627C9.73041 26.3281 9.5625 25.9227 9.5625 25.5C9.5625 25.0773 9.73041 24.6719 10.0293 24.373C10.3282 24.0742 10.7336 23.9062 11.1562 23.9062Z" fill="#2A5C66"/>
-                <path d="M11.816 25.5L25.0345 38.7154C25.3338 39.0146 25.5019 39.4205 25.5019 39.8437C25.5019 40.267 25.3338 40.6729 25.0345 40.9721C24.7353 41.2714 24.3294 41.4395 23.9062 41.4395C23.4829 41.4395 23.0771 41.2714 22.7778 40.9721L8.43404 26.6284C8.28562 26.4803 8.16787 26.3045 8.08752 26.1108C8.00718 25.9172 7.96582 25.7096 7.96582 25.5C7.96582 25.2904 8.00718 25.0828 8.08752 24.8892C8.16787 24.6955 8.28562 24.5197 8.43404 24.3716L22.7778 10.0279C23.0771 9.72861 23.4829 9.56049 23.9062 9.56049C24.3294 9.56049 24.7353 9.72861 25.0345 10.0279C25.3338 10.3271 25.5019 10.733 25.5019 11.1562C25.5019 11.5795 25.3338 11.9854 25.0345 12.2846L11.816 25.5Z" fill="#2A5C66"/>
-            </svg>
-        </div> -->
+    <form (ngSubmit)="checkout()" [formGroup]="shippingForm" class="p-10 px-[250px] grid select-none">
 
-        <p class="font-Sofia font-[1000] text-[2.2rem]">Products on Cart</p>
-        <div class="flex flex-row gap-2">
-            <div class="flex flex-col flex-1 gap-3 grid-cols-2">
-                <div class="border-2 flex flex-row items-center">
-                    <mat-checkbox [(ngModel)]="checkAll" id="mainCheck" name="mainCheck" (change)="selectAll($event)"> </mat-checkbox>
-                    <p class="text-[0.85rem] opacity-80">Select All Items ({{carts.length}} item(s))</p>
-                </div>
-                <div *ngFor="let cart of carts" class="flex flex-row border-2">
-                    <mat-checkbox [(ngModel)]="cart.selected" name="cartCheck" (change)="onSelect($event, cart)"></mat-checkbox>
-                    <div class="w-[110px] h-full flex justify-center items-center">
-                        <img class="object-cover" [src]="cart.product_image">
-                    </div>
-                    <div class="flex flex-col px-3 py-2 flex-1">
-                        <div class="flex flex-row justify-between">
-                            <p class="w-[90%]">{{ cart.product_name }}</p>
-                            <svg (click)="deleteCart(cart)" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M6 19C6 19.5304 6.21071 20.0391 6.58579 20.4142C6.96086 20.7893 7.46957 21 8 21H16C16.5304 21 17.0391 20.7893 17.4142 20.4142C17.7893 20.0391 18 19.5304 18 19V7H6V19ZM8 9H16V19H8V9ZM15.5 4L14.5 3H9.5L8.5 4H5V6H19V4H15.5Z" fill="#6437A0"/>
-                            </svg>
-                                
-                        </div>
-                        <p class="text-[1.2rem] text-[#6437A0]">₱{{ cart.product_price * cart.quantity }}</p>
-
-
-                        <div class="flex flex-row w-[100px] border-2 justify-between my-3">
-                            <div class="bg-[#F9F9F9]">
-                                <svg (click)="decrementValue(cart)" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M19 12.998H5V10.998H19V12.998Z" fill="#6437A0"/>
-                                </svg>
-                                    
-                            </div>
-                
-                            <p class="flex-1 text-center">{{cart.quantity}}</p>
-                
-                            <div class="bg-[#F9F9F9]">
-                                <svg (click)="incrementValue(cart)" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <path d="M19 12.998H13V18.998H11V12.998H5V10.998H11V4.99805H13V10.998H19V12.998Z" fill="#6437A0"/>
-                                </svg>
-                                    
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        @if(isCheckout){
+            <div (click)="isCheckout = false" class="mb-2 rounded-[50%] w-[50px] h-[50px] bg-white flex justify-center items-center shadow-main">
+                <svg width="30" height="30" viewBox="0 0 51 51" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M11.1562 23.9062H43.0312C43.4539 23.9062 43.8593 24.0742 44.1582 24.373C44.4571 24.6719 44.625 25.0773 44.625 25.5C44.625 25.9227 44.4571 26.3281 44.1582 26.627C43.8593 26.9258 43.4539 27.0938 43.0312 27.0938H11.1562C10.7336 27.0938 10.3282 26.9258 10.0293 26.627C9.73041 26.3281 9.5625 25.9227 9.5625 25.5C9.5625 25.0773 9.73041 24.6719 10.0293 24.373C10.3282 24.0742 10.7336 23.9062 11.1562 23.9062Z" fill="#2A5C66"/>
+                    <path d="M11.816 25.5L25.0345 38.7154C25.3338 39.0146 25.5019 39.4205 25.5019 39.8437C25.5019 40.267 25.3338 40.6729 25.0345 40.9721C24.7353 41.2714 24.3294 41.4395 23.9062 41.4395C23.4829 41.4395 23.0771 41.2714 22.7778 40.9721L8.43404 26.6284C8.28562 26.4803 8.16787 26.3045 8.08752 26.1108C8.00718 25.9172 7.96582 25.7096 7.96582 25.5C7.96582 25.2904 8.00718 25.0828 8.08752 24.8892C8.16787 24.6955 8.28562 24.5197 8.43404 24.3716L22.7778 10.0279C23.0771 9.72861 23.4829 9.56049 23.9062 9.56049C24.3294 9.56049 24.7353 9.72861 25.0345 10.0279C25.3338 10.3271 25.5019 10.733 25.5019 11.1562C25.5019 11.5795 25.3338 11.9854 25.0345 12.2846L11.816 25.5Z" fill="#2A5C66"/>
+                </svg>
             </div>
+            <p class="font-Sofia font-[1000] text-[2.2rem]">Ship To</p>
+        }
+        @else {
+            <p class="font-Sofia font-[1000] text-[2.2rem]">Products on Cart</p>
+        }
+        
+        <div class="flex flex-row gap-3">
+            @if(isCheckout){
+                <div class="flex flex-col flex-1 gap-3">
+                    <div class="flex flex-row flex-1 gap-3">
+                        <div class="flex flex-col justify-around flex-1 h-[60px]">
+                            <p class="font-semibold">First Name</p>
+                            <input formControlName="first_name" type="text" class="outline-none bg-opacity-none border-2 border-slate-300 p-1 rounded-[5px]">
+                        </div>
+                        <div class="flex flex-col justify-around flex-1 h-[60px] border-b-2">
+                            <p class="font-semibold">Last Name</p>
+                            <input formControlName="last_name" type="text" class="outline-none bg-opacity-none border-2 border-slate-300 p-1 rounded-[5px]">
+                        </div>
+                    </div>
+                    <div class="flex flex-row flex-1 gap-3">
+                        <div class="flex flex-col justify-around flex-1 h-[60px] border-b-2">
+                            <p class="font-semibold">Street Address</p>
+                            <input formControlName="street_address" type="text" class="outline-none bg-opacity-none border-2 border-slate-300 p-1 rounded-[5px]">
+                        </div>
+                    </div>
+                    <div class="flex flex-row flex-1 gap-3">
+                        <div class="flex flex-col justify-around flex-1 h-[60px] border-b-2">
+                            <p class="font-semibold">Postal Code</p>
+                            <input formControlName="postal_code" type="text" class="outline-none bg-opacity-none border-2 border-slate-300 p-1 rounded-[5px]">
+                        </div>
+                        <div class="flex flex-col justify-around flex-1 h-[60px] border-b-2">
+                            <p class="font-semibold">Town/City</p>
+                            <input formControlName="town" type="text" class="outline-none bg-opacity-none border-2 border-slate-300 p-1 rounded-[5px]">
+                        </div>
+                    </div>
+                    <div class="flex flex-row flex-1 gap-3">
+                        <div class="flex flex-col justify-around flex-1 h-[60px] border-b-2">
+                            <p class="font-semibold">Province</p>
+                            <input formControlName="province" type="text" class="outline-none bg-opacity-none border-2 border-slate-300 p-1 rounded-[5px]">
+                        </div>
+                    </div>
+                    <div class="flex flex-row flex-1 gap-3">
+                        <div class="flex flex-col justify-around flex-1 h-[60px] border-b-2">
+                            <p class="font-semibold">Phone Number</p>
+                            <input formControlName="phone_number" type="text" class="outline-none bg-opacity-none border-2 border-slate-300 p-1 rounded-[5px]">
+                        </div>
+                    </div>
+                </div>
+            }
+            @else {
+                <div class="flex flex-col flex-1 gap-3 grid-cols-2">
+                    <div class="border-2 flex flex-row items-center">
+                        <mat-checkbox [(ngModel)]="checkAll" id="mainCheck" name="mainCheck" (change)="selectAll($event)"> </mat-checkbox>
+                        <p class="text-[0.85rem] opacity-80">Select All Items ({{carts.length}} item(s))</p>
+                    </div>
+                    <div *ngFor="let cart of carts" class="flex flex-row border-2">
+                        <mat-checkbox [(ngModel)]="cart.selected" name="cartCheck" (change)="onSelect($event, cart)"></mat-checkbox>
+                        <div class="w-[110px] h-full flex justify-center items-center">
+                            <img class="object-cover" [src]="cart.product_image">
+                        </div>
+                        <div class="flex flex-col px-3 py-2 flex-1">
+                            <div class="flex flex-row justify-between">
+                                <p class="w-[90%]">{{ cart.product_name }}</p>
+                                <svg (click)="deleteCart(cart)" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M6 19C6 19.5304 6.21071 20.0391 6.58579 20.4142C6.96086 20.7893 7.46957 21 8 21H16C16.5304 21 17.0391 20.7893 17.4142 20.4142C17.7893 20.0391 18 19.5304 18 19V7H6V19ZM8 9H16V19H8V9ZM15.5 4L14.5 3H9.5L8.5 4H5V6H19V4H15.5Z" fill="#6437A0"/>
+                                </svg>
+                                    
+                            </div>
+                            <p class="text-[1.2rem] text-[#6437A0]">₱{{ (cart.product_price - (cart.product_price * (cart.product_discount / 100))) * cart.quantity | number }}</p>
+    
+    
+                            <div class="flex flex-row w-[100px] border-2 justify-between my-3">
+                                <div class="bg-[#F9F9F9]">
+                                    <svg (click)="decrementValue(cart)" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M19 12.998H5V10.998H19V12.998Z" fill="#6437A0"/>
+                                    </svg>
+                                        
+                                </div>
+                    
+                                <p class="flex-1 text-center">{{cart.quantity}}</p>
+                    
+                                <div class="bg-[#F9F9F9]">
+                                    <svg (click)="incrementValue(cart)" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M19 12.998H13V18.998H11V12.998H5V10.998H11V4.99805H13V10.998H19V12.998Z" fill="#6437A0"/>
+                                    </svg>
+                                        
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
 
-            <div class="w-[320px] border-2 p-3">
-                <p class="font-Sofia text-[0.9rem] opacity-80">Location</p>
 
-                <hr class="my-2">
-
-                <p class="font-Sofia font-black text-[1.2rem]">Order Summary</p>
-                <div class="flex flex-row justify-between items-center">
-                    <p class="text-[0.9rem] opacity-80">Subtotal ({{ selectedLength }} items)</p>
-                    <p class="text-[0.9rem]">₱{{ total }}</p>
+            <div class="flex flex-col w-[320px] gap-2">
+                <div class="border-2 p-3">
+                    <p class="font-Sofia text-[0.9rem] opacity-80">Location</p>
+    
+                    <hr class="my-2">
+    
+                    <p class="font-Sofia font-black text-[1.2rem]">Order Summary</p>
+                    <div class="flex flex-row justify-between items-center">
+                        <p class="text-[0.9rem] opacity-80">Subtotal ({{ selectedLength }} items)</p>
+                        <p class="text-[0.9rem]">₱{{ total }}</p>
+                    </div>
+    
+                    <div class="flex flex-row justify-between items-center">
+                        <p class="text-[0.9rem] opacity-80">Shipping Fee</p>
+                        <p class="text-[0.9rem]">₱{{shippingFee}}</p>
+                    </div>
+    
+                    <hr class="my-2">
+    
+                    <div class="flex flex-row justify-between items-center">
+                        <p class="text-[0.9rem]">Total</p>
+                        <p class="text-[1.2rem] text-[#6437A0]">₱{{ total + shippingFee}}</p>
+                    </div>
                 </div>
 
-                <div class="flex flex-row justify-between items-center">
-                    <p class="text-[0.9rem] opacity-80">Shipping Fee</p>
-                    <p class="text-[0.9rem]">₱{{shippingFee}}</p>
+
+                @if(isCheckout){
+                    <div (click)="checkout()" class="border-2 bg-[#6437A0] duration-300 hover:duration-300 hover:shadow-main rounded-[5px] p-2">
+                        <p class="font-Sofia text-white text-center">Confirm Checkout</p>
+                    </div>
+                }
+                @else {
+                    <div (click)="isCheckout = true" class="border-2 bg-[#6437A0] duration-300 hover:duration-300 hover:shadow-main rounded-[5px] p-2">
+                        <p class="font-Sofia text-white text-center">Proceed to Checkout</p>
+                    </div>
+                }
+
+            </div>
+        </div>
+    </form>
+}
+
+@else if (isFilter) {
+    <div class="flex flex-col w-full min-h-full">
+        <div class="p-10 px-[110px] grid gap-[30px]">
+            <div class=" grid">
+                <div class="w-full flex flex-row justify-between items-center select-none">
+                    <p class="font-Sofia font-[1000] text-[2.2rem]">Showing {{filterString | titlecase}} - {{filterProduct.length}} item(s)</p>
                 </div>
+                <div
+                class="mobileS:grid-cols-6 tablet:grid-cols-5 grid gap-3 w-full"
+                >
+                    <div
+                        *ngFor="let prod of filterProduct"
+                        (click)="openDialog(prod)"
+                        class="flex flex-col h-[320px] mb-5 relative rounded-[5px] bg-white overflow-hidden border-2 duration-300 hover:duration-300 hover:shadow-main p-2"
+                    >
+                        <img [src]="prod.product_image" class="h-[180px] rounded-[5px] object-cover mb-2">
+                        <div class="text-[0.9rem] font-[300] line-clamp-2">{{ prod.product_name }}</div>
+                        <div class="text-[1.0rem] font-medium  mt-auto">PHP {{ prod.product_price | number }}</div>
+                
+                        <div class="flex flex-row items-center">
+                            @if(prod.product_rating >= 1){
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M5.825 21L7.45 13.975L2 9.25L9.2 8.625L12 2L14.8 8.625L22 9.25L16.55 13.975L18.175 21L12 17.275L5.825 21Z" fill="#6437A0"/>
+                                </svg>
+                            }
+                            @else {
+                                <svg  width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path class="fill-slate-200" d="M5.825 21L7.45 13.975L2 9.25L9.2 8.625L12 2L14.8 8.625L22 9.25L16.55 13.975L18.175 21L12 17.275L5.825 21Z" fill="#6437A0"/>
+                                </svg>
+                            }
 
-                <hr class="my-2">
+                            @if(prod.product_rating >= 2){
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M5.825 21L7.45 13.975L2 9.25L9.2 8.625L12 2L14.8 8.625L22 9.25L16.55 13.975L18.175 21L12 17.275L5.825 21Z" fill="#6437A0"/>
+                                </svg>
+                            }
+                            @else {
+                                <svg  width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path class="fill-slate-200" d="M5.825 21L7.45 13.975L2 9.25L9.2 8.625L12 2L14.8 8.625L22 9.25L16.55 13.975L18.175 21L12 17.275L5.825 21Z" fill="#6437A0"/>
+                                </svg>
+                            }
 
-                <div class="flex flex-row justify-between items-center">
-                    <p class="text-[0.9rem]">Total</p>
-                    <p class="text-[1.2rem] text-[#6437A0]">₱{{ total + shippingFee}}</p>
+                            @if(prod.product_rating >= 3){
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M5.825 21L7.45 13.975L2 9.25L9.2 8.625L12 2L14.8 8.625L22 9.25L16.55 13.975L18.175 21L12 17.275L5.825 21Z" fill="#6437A0"/>
+                                </svg>
+                            }
+                            @else {
+                                <svg  width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path class="fill-slate-200" d="M5.825 21L7.45 13.975L2 9.25L9.2 8.625L12 2L14.8 8.625L22 9.25L16.55 13.975L18.175 21L12 17.275L5.825 21Z" fill="#6437A0"/>
+                                </svg>
+                            }
+
+                            @if(prod.product_rating >= 4){
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M5.825 21L7.45 13.975L2 9.25L9.2 8.625L12 2L14.8 8.625L22 9.25L16.55 13.975L18.175 21L12 17.275L5.825 21Z" fill="#6437A0"/>
+                                </svg>
+                            }
+                            @else {
+                                <svg  width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path class="fill-slate-200" d="M5.825 21L7.45 13.975L2 9.25L9.2 8.625L12 2L14.8 8.625L22 9.25L16.55 13.975L18.175 21L12 17.275L5.825 21Z" fill="#6437A0"/>
+                                </svg>
+                            }
+
+                            @if(prod.product_rating >= 5){
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M5.825 21L7.45 13.975L2 9.25L9.2 8.625L12 2L14.8 8.625L22 9.25L16.55 13.975L18.175 21L12 17.275L5.825 21Z" fill="#6437A0"/>
+                                </svg>
+                            }
+                            @else {
+                                <svg  width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path class="fill-slate-200" d="M5.825 21L7.45 13.975L2 9.25L9.2 8.625L12 2L14.8 8.625L22 9.25L16.55 13.975L18.175 21L12 17.275L5.825 21Z" fill="#6437A0"/>
+                                </svg>
+                            }
+        
+
+                            <p class="ml-2 text-[0.9rem]">{{ prod.product_rating }}</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -83,12 +233,12 @@
 
 @else {
     <div class="flex flex-col w-full min-h-full">
-        <div class="p-10 px-[110px]">
+        <div class="p-10 px-[110px] grid gap-[30px]">
             <div class=" grid">
                 <div class="w-full flex flex-col justify-center select-none overflow-x-hidden">
                     <div class="flex flex-row items-center justify-between mb-2">
                         <p class="font-Sofia font-[1000] text-[2.2rem]">Rainy Day Sale</p>
-                        <div class="w-[400px] rounded-[15px] bg-[#6437A0] font-Sofia font-bold text-[1.5rem] text-white p-1 text-center">
+                        <div class="w-[400px] rounded-[15px] text-black border-slate-300 border-4 font-Sofia font-bold text-[1.5rem]  p-1 text-center">
                             {{countdown}}
                         </div>
                     </div>
@@ -102,9 +252,12 @@
                                 (click)="openDialog(prod)"
                                 class="flex flex-col w-[190px] h-[240px] mb-5 relative rounded-[5px] bg-white border-2 duration-300 hover:duration-300 hover:shadow-main p-2"
                             >
+                                <div class="absolute top-0 right-0 bg-[#6437A0] text-white text-xs px-2 py-1 rounded-bl-[5px]">
+                                    {{ prod.product_discount }}% Off
+                                </div>
                                 <img [src]="prod.product_image" class="h-[140px] rounded-[5px] object-cover mb-2">
                                 <div class="text-[0.9rem] font-[300] line-clamp-2">{{ prod.product_name }}</div>
-                                <div class="text-[1.0rem] font-medium  mt-auto">PHP {{ prod.product_price }}</div>                
+                                <div class="text-[1.0rem] font-medium  mt-auto">PHP {{ prod.product_price - (prod.product_price * (prod.product_discount / 100)) | number }}</div>                
                             </div>
                         </div>
                     </div>
@@ -123,7 +276,7 @@
                     </div>
 
                     <div class="flex flex-row items-center justify-between">
-                        <div class="duration-300 hover:duration-300 hover:shadow-main relative rounded-[15px] w-[210px] h-[210px] bg-red-200 overflow-hidden">
+                        <div (click)="triggerFilter('electronics')" class="duration-300 hover:duration-300 hover:shadow-main hover:scale-[102%] relative rounded-[15px] w-[210px] h-[210px] bg-red-200 overflow-hidden">
                             <img class="absolute inset-0 w-full h-full object-cover" src="/assets/electronics.png">
                             <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
                             <div class="absolute bottom-0 left-0 p-4">
@@ -131,7 +284,7 @@
                             </div>
                         </div>
 
-                        <div class="duration-300 hover:duration-300 hover:shadow-main relative rounded-[15px] w-[210px] h-[210px] bg-red-200 overflow-hidden">
+                        <div (click)="triggerFilter('apparel')" class="duration-300 hover:duration-300 hover:shadow-main hover:scale-[102%] relative rounded-[15px] w-[210px] h-[210px] bg-red-200 overflow-hidden">
                             <img class="absolute inset-0 w-full h-full object-cover" src="/assets/apparel.png">
                             <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
                             <div class="absolute bottom-0 left-0 p-4">
@@ -139,7 +292,7 @@
                             </div>
                         </div>
 
-                        <div class="duration-300 hover:duration-300 hover:shadow-main relative rounded-[15px] w-[210px] h-[210px] bg-red-200 overflow-hidden">
+                        <div (click)="triggerFilter('appliances')" class="duration-300 hover:duration-300 hover:shadow-main hover:scale-[102%] relative rounded-[15px] w-[210px] h-[210px] bg-red-200 overflow-hidden">
                             <img class="absolute inset-0 w-full h-full object-cover" src="/assets/appliances.png">
                             <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
                             <div class="absolute bottom-0 left-0 p-4">
@@ -147,7 +300,7 @@
                             </div>
                         </div>
 
-                        <div class="duration-300 hover:duration-300 hover:shadow-main relative rounded-[15px] w-[210px] h-[210px] bg-red-200 overflow-hidden">
+                        <div (click)="triggerFilter('gaming')" class="duration-300 hover:duration-300 hover:shadow-main hover:scale-[102%] relative rounded-[15px] w-[210px] h-[210px] bg-red-200 overflow-hidden">
                             <img class="absolute inset-0 w-full h-full object-cover" src="/assets/gaming.png">
                             <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
                             <div class="absolute bottom-0 left-0 p-4">
@@ -155,7 +308,7 @@
                             </div>
                         </div>
 
-                        <div class="duration-300 hover:duration-300 hover:shadow-main relative rounded-[15px] w-[210px] h-[210px] bg-red-200 overflow-hidden">
+                        <div (click)="triggerFilter('miscellaneous')" class="duration-300 hover:duration-300 hover:shadow-main hover:scale-[102%] relative rounded-[15px] w-[210px] h-[210px] bg-red-200 overflow-hidden">
                             <img class="absolute inset-0 w-full h-full object-cover" src="/assets/miscellaneous.png">
                             <div class="absolute inset-0 bg-gradient-to-t from-black to-transparent"></div>
                             <div class="absolute bottom-0 left-0 p-4">
@@ -183,30 +336,71 @@
                         (click)="openDialog(prod)"
                         class="flex flex-col h-[320px] mb-5 relative rounded-[5px] bg-white overflow-hidden border-2 duration-300 hover:duration-300 hover:shadow-main p-2"
                     >
+                        @if(prod.product_discount > 0){
+                            <div class="absolute top-0 right-0 bg-[#6437A0] text-white text-xs px-2 py-1 rounded-bl-[5px]">
+                                {{ prod.product_discount }}% Off
+                            </div>
+                        }
                         <img [src]="prod.product_image" class="h-[180px] rounded-[5px] object-cover mb-2">
                         <div class="text-[0.9rem] font-[300] line-clamp-2">{{ prod.product_name }}</div>
                         <div class="text-[1.0rem] font-medium  mt-auto">PHP {{ prod.product_price | number }}</div>
 
                         <div class="flex flex-row items-center">
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M5.825 21L7.45 13.975L2 9.25L9.2 8.625L12 2L14.8 8.625L22 9.25L16.55 13.975L18.175 21L12 17.275L5.825 21Z" fill="#6437A0"/>
-                            </svg>
+                            @if(prod.product_rating >= 1){
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M5.825 21L7.45 13.975L2 9.25L9.2 8.625L12 2L14.8 8.625L22 9.25L16.55 13.975L18.175 21L12 17.275L5.825 21Z" fill="#6437A0"/>
+                                </svg>
+                            }
+                            @else {
+                                <svg  width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path class="fill-slate-200" d="M5.825 21L7.45 13.975L2 9.25L9.2 8.625L12 2L14.8 8.625L22 9.25L16.55 13.975L18.175 21L12 17.275L5.825 21Z" fill="#6437A0"/>
+                                </svg>
+                            }
 
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M5.825 21L7.45 13.975L2 9.25L9.2 8.625L12 2L14.8 8.625L22 9.25L16.55 13.975L18.175 21L12 17.275L5.825 21Z" fill="#6437A0"/>
-                            </svg>
+                            @if(prod.product_rating >= 2){
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M5.825 21L7.45 13.975L2 9.25L9.2 8.625L12 2L14.8 8.625L22 9.25L16.55 13.975L18.175 21L12 17.275L5.825 21Z" fill="#6437A0"/>
+                                </svg>
+                            }
+                            @else {
+                                <svg  width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path class="fill-slate-200" d="M5.825 21L7.45 13.975L2 9.25L9.2 8.625L12 2L14.8 8.625L22 9.25L16.55 13.975L18.175 21L12 17.275L5.825 21Z" fill="#6437A0"/>
+                                </svg>
+                            }
 
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M5.825 21L7.45 13.975L2 9.25L9.2 8.625L12 2L14.8 8.625L22 9.25L16.55 13.975L18.175 21L12 17.275L5.825 21Z" fill="#6437A0"/>
-                            </svg>
+                            @if(prod.product_rating >= 3){
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M5.825 21L7.45 13.975L2 9.25L9.2 8.625L12 2L14.8 8.625L22 9.25L16.55 13.975L18.175 21L12 17.275L5.825 21Z" fill="#6437A0"/>
+                                </svg>
+                            }
+                            @else {
+                                <svg  width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path class="fill-slate-200" d="M5.825 21L7.45 13.975L2 9.25L9.2 8.625L12 2L14.8 8.625L22 9.25L16.55 13.975L18.175 21L12 17.275L5.825 21Z" fill="#6437A0"/>
+                                </svg>
+                            }
 
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M5.825 21L7.45 13.975L2 9.25L9.2 8.625L12 2L14.8 8.625L22 9.25L16.55 13.975L18.175 21L12 17.275L5.825 21Z" fill="#6437A0"/>
-                            </svg>
+                            @if(prod.product_rating >= 4){
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M5.825 21L7.45 13.975L2 9.25L9.2 8.625L12 2L14.8 8.625L22 9.25L16.55 13.975L18.175 21L12 17.275L5.825 21Z" fill="#6437A0"/>
+                                </svg>
+                            }
+                            @else {
+                                <svg  width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path class="fill-slate-200" d="M5.825 21L7.45 13.975L2 9.25L9.2 8.625L12 2L14.8 8.625L22 9.25L16.55 13.975L18.175 21L12 17.275L5.825 21Z" fill="#6437A0"/>
+                                </svg>
+                            }
 
-                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M5.825 21L7.45 13.975L2 9.25L9.2 8.625L12 2L14.8 8.625L22 9.25L16.55 13.975L18.175 21L12 17.275L5.825 21Z" fill="#6437A0"/>
-                            </svg>
+                            @if(prod.product_rating >= 5){
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M5.825 21L7.45 13.975L2 9.25L9.2 8.625L12 2L14.8 8.625L22 9.25L16.55 13.975L18.175 21L12 17.275L5.825 21Z" fill="#6437A0"/>
+                                </svg>
+                            }
+                            @else {
+                                <svg  width="15" height="15" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path class="fill-slate-200" d="M5.825 21L7.45 13.975L2 9.25L9.2 8.625L12 2L14.8 8.625L22 9.25L16.55 13.975L18.175 21L12 17.275L5.825 21Z" fill="#6437A0"/>
+                                </svg>
+                            }
+        
 
                             <p class="ml-2 text-[0.9rem]">{{ prod.product_rating }}</p>
                         </div>

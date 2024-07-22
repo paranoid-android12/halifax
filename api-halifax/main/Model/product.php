@@ -47,6 +47,24 @@ class Product extends GlobalMethods
         return $this->executeGetQuery($sql)['data'];
     }
 
+    public function incrementCart($data){
+                //Initial adding of product
+                $params = array('quantity');
+                $tempForm = array(
+                    $data->count,
+                    $data->id
+                );
+        
+                try {
+                    //code...
+                    return $this->prepareEditBind('cart', $params, $tempForm, 'cart_ID');
+                } catch (\Throwable $th) {
+                    header('HTTP/1.0 500 Internal Server Error');
+                    echo 'Error: ' . $th;
+                    exit;
+                }
+    }
+
     public function deleteCart($id){
         return $this->prepareDeleteBind('cart', 'cart_ID', $id);
     }

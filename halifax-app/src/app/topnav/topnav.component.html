@@ -1,10 +1,11 @@
 <div class="bg-white h-[60px] overscroll-none items-center py-2 px-[110px] flex flex-row border-b-2 border-[#E8E8E8]">
     <p (click)="toggle(false)" class="cursor-pointer font-Sofia font-[1000] text-[1.4rem] mr-5">Halifax</p>
     <div class="flex flex-row items-center flex-1">
-        <div class="text-[0.9rem] px-5 cursor-pointer flex items-center h-[60px] duration-300 hover:duration-300 hover:bg-slate-100">Electronics</div>
-        <div class="text-[0.9rem] px-5 cursor-pointer flex items-center h-[60px] duration-300 hover:duration-300 hover:bg-slate-100">Apparel</div>
-        <div class="text-[0.9rem] px-5 cursor-pointer flex items-center h-[60px] duration-300 hover:duration-300 hover:bg-slate-100">Appliances</div>
-        <div class="text-[0.9rem] px-5 cursor-pointer flex items-center h-[60px] duration-300 hover:duration-300 hover:bg-slate-100">Miscellaneous</div>
+        <div (click)="togFilt('electronics')" class="text-[0.9rem] px-5 cursor-pointer flex items-center h-[60px] duration-300 hover:duration-300 hover:bg-slate-100">Electronics</div>
+        <div (click)="togFilt('apparel')" class="text-[0.9rem] px-5 cursor-pointer flex items-center h-[60px] duration-300 hover:duration-300 hover:bg-slate-100">Apparel</div>
+        <div (click)="togFilt('appliances')" class="text-[0.9rem] px-5 cursor-pointer flex items-center h-[60px] duration-300 hover:duration-300 hover:bg-slate-100">Appliances</div>
+        <div (click)="togFilt('gaming')" class="text-[0.9rem] px-5 cursor-pointer flex items-center h-[60px] duration-300 hover:duration-300 hover:bg-slate-100">Gaming</div>
+        <div (click)="togFilt('miscellaneous')" class="text-[0.9rem] px-5 cursor-pointer flex items-center h-[60px] duration-300 hover:duration-300 hover:bg-slate-100">Miscellaneous</div>
     </div>
 
     <div class="flex flex-row items-center">

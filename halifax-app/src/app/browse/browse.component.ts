@@ -10,7 +10,7 @@ import { TokenService } from '../services/authentication/token.service';
 import { Router } from '@angular/router';
 import { TopnavComponent } from "../topnav/topnav.component";
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { FormsModule } from '@angular/forms';
+import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 interface JwtPayload{
   data: any
@@ -19,23 +19,37 @@ interface JwtPayload{
 @Component({
   selector: 'app-browse',
   standalone: true,
-  imports: [CommonModule, TopnavComponent, MatCheckboxModule, FormsModule],
+  imports: [CommonModule, TopnavComponent, MatCheckboxModule, FormsModule, ReactiveFormsModule],
   templateUrl: './browse.component.html',
   styleUrl: './browse.component.css'
 })
 export class BrowseComponent {
   product: Product[] = []
+  filterProduct: Product[] = []
+  filterString: string = ''
   rainyProduct: Product[] = []
   carts: Cart[] = []
   selectedLength: number = 0;
   total: number = -1;
   isCart = false;
+  isCheckout = false;
+  isFilter = false;
   userDrop = false;
   userName = '';
   countdown: string = '';
   intervalId: number = -1;
   shippingFee: number = 78;
   checkAll: boolean = false;
+
+  shippingForm = new FormGroup({
+    first_name: new FormControl<string>('',[Validators.required]),
+    last_name: new FormControl<string>('',[Validators.required]),
+    street_address: new FormControl<string>('',[Validators.required]),
+    postal_code: new FormControl<string>('',[Validators.required]),
+    town: new FormControl<string>('',[Validators.required]),
+    province: new FormControl<string>('',[Validators.required]),
+    phone_number: new FormControl<string>('',[Validators.required]),
+  });
 
   constructor(
     private dataService: DataService,
@@ -58,9 +72,14 @@ export class BrowseComponent {
     this.userName = decoded.data.username;
 
     this.fetchCart();
-    this.startCountdown()
+    this.startCountdown() 
 
 
+
+  }
+
+  checkout(){
+    console.log()
   }
 
   //I hate every single moment i spent on this projects
@@ -71,6 +90,11 @@ export class BrowseComponent {
     }
     return array;
 }
+  triggerFilter(filter: string){
+      this.isFilter = true;
+      this.filterProduct = this.product.filter(product => product.product_category.split(',').includes(filter));
+      this.filterString = filter;
+  }
 
   startCountdown(): void {
     const endTime = new Date();
@@ -104,12 +128,15 @@ export class BrowseComponent {
     this.selectedLength = this.carts.filter(cart => cart.selected).length;
     this.carts.forEach(cart => {
       if(cart.selected){
-        this.total = this.total + cart.product_price * cart.quantity;
+        this.total = this.total + ((cart.product_price - (cart.product_price * (cart.product_discount / 100))) * cart.quantity);
       }
     })
   }
 
+  // cart.product_price - (cart.product_price * (cart.product_discount / 100))) * cart.quantity
+
   toggleCart(event: any){
+    this.isFilter = false;
     this.isCart = event;
     this.total = 0;
   }

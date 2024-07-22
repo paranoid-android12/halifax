@@ -1,8 +1,8 @@
 <div
-  class="h-auto w-auto rounded-[5px] w-max-[80vw] h-max-[80vh] shadow-lg opacity-100 flex flex-row"
+  class="h-auto w-auto rounded-[5px] w-max-[80vw] h-max-[80vh] shadow-lg opacity-100 flex flex-row p-2"
 >
-    <div class="flex-1 h-[350px] w-[350px]">
-        <img [src]="product.product_image" class="w-full h-full object-cover">
+    <div class="flex-1 h-[350px] w-[350px] rounded-[5px] overflow-hidden mr-5">
+        <img [src]="product.product_image" class="w-full h-full object-cover border-2">
     </div>
     <div class="flex-1 p-2 py-4">
         <p class="font-Roboto font-medium text-[1rem]">{{ product.product_name }}</p>
@@ -27,8 +27,8 @@
             </div>
         </div>
 
-        <div (click)="checkExist()" class="p-1 border-2 border-[#6437A0] bg-[#CFB9EB] rounded-[5px] w-[100px] flex justify-center items-center">
-            <p class="select-none text-[0.9rem] text-[#6437A0] font-semibold">Add to Cart</p>
+        <div (click)="checkExist()" class="p-1 border-2 border-black rounded-[5px] w-[100px] flex justify-center items-center">
+            <p class="select-none text-[0.9rem] text-black font-medium">Add to Cart</p>
         </div>
     </div>
 </div>

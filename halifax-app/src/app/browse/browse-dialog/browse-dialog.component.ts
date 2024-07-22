@@ -36,13 +36,24 @@ export class BrowseDialogComponent {
         console.log(next);
         for(let x of next){
           if(x.product_ID === this.product.product_ID){
-            this._snackBar.open("This product is already added to the cart.", 'Undo', {duration: 1500});
+            this.increment(x.cart_ID, x.quantity, this.count);
             return;
           }
         }
         this.submit();
       }
     });
+  }
+
+  increment(cartID: number, cartCount: number, toAddCount: number){
+    const newCount = +cartCount + +toAddCount;
+    console.log(newCount, cartCount, toAddCount);
+    this.dataService.postData({id: cartID, count: newCount}, "incrementCart").subscribe({
+      next: (next:any) => {
+        this._snackBar.open("Product already exists and is appended to the cart.", 'Undo', {duration: 1500});
+        this.dialogRef.close();
+      }
+    })
   }
 
   submit(){

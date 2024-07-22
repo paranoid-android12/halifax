@@ -62,6 +62,10 @@ switch ($_SERVER['REQUEST_METHOD']) {
                 $ver = $globalOb->verifyToken();
                 echo json_encode($tunnel->toAddCart($data, $ver['payload']['userID']));
                 break;
+            case 'incrementCart':
+                $ver = $globalOb->verifyToken();
+                echo json_encode($tunnel->toIncrementCart($data));
+                break;
 
             default:
                 http_response_code(403);

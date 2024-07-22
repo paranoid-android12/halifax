@@ -15,6 +15,7 @@ interface JwtPayload{
 })
 export class TopnavComponent {
   @Output() toggleCart = new EventEmitter<boolean>();
+  @Output() toggleFilter = new EventEmitter<string>();
   userDrop = false;
   userName = '';
 
@@ -29,6 +30,11 @@ export class TopnavComponent {
   toggle(toggle: boolean){
     this.toggleCart.emit(toggle);
   }
+
+  togFilt(string: string){
+    this.toggleFilter.emit(string);
+  }
+  
 
   logout(){
     this.routers.navigate(['']);
