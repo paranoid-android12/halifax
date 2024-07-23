@@ -36,6 +36,7 @@ export class BrowseComponent {
   isCart = false;
   isCheckout = false;
   isFilter = false;
+  user: any = '';
   userDrop = false;
   userName = '';
   countdown: string = '';
@@ -44,8 +45,8 @@ export class BrowseComponent {
   checkAll: boolean = false;
 
   shippingForm = new FormGroup({
-    first_name: new FormControl<string>('',[Validators.required]),
-    last_name: new FormControl<string>('',[Validators.required]),
+    first_name: new FormControl<string>(this.user.first_name+'',[Validators.required]),
+    last_name: new FormControl<string>('lolerz',[Validators.required]),
     street_address: new FormControl<string>('',[Validators.required]),
     postal_code: new FormControl<string>('',[Validators.required]),
     town: new FormControl<string>('',[Validators.required]),
@@ -72,10 +73,21 @@ export class BrowseComponent {
 
     const decoded = this.tokenService.decodeToken() as JwtPayload;
     this.userName = decoded.data.username;
+    this.user = decoded.data;
+    console.log(decoded.data);
 
     this.fetchCart();
     this.startCountdown() 
 
+    this.shippingForm.patchValue({
+      first_name: this.user.first_name,
+      last_name: this.user.last_name,
+      phone_number: this.user.phone_number,
+      street_address: this.user.street_address,
+      postal_code: this.user.postal_code,
+      town: this.user.town_city,
+      province: this.user.province
+    })
 
 
   }
@@ -123,6 +135,14 @@ export class BrowseComponent {
 
       this.countdown = `${days} : ${hours} : ${minutes} : ${seconds}`;
     }, 1000);
+  }
+
+  proceedCheckout(){
+    if(this.total < 1){
+      this._snackBar.open("You haven't selected anything to checkout.", 'Undo', {duration: 1500})
+      return;
+    }
+    this.isCheckout = true
   }
 
   calculateTotal(){

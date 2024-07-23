@@ -5,7 +5,7 @@ use Firebase\JWT\JWT;
 
 class Login extends GlobalMethods{
 
-    function generateToken($role, $name)
+    function generateToken($role, $name, $email, $password, $first_name, $last_name, $street_address, $postal_code, $town_city, $province, $phone_number)
     {
         $issuedAt = time();
         $expirationTime = $issuedAt + (60 * 60);
@@ -18,7 +18,16 @@ class Login extends GlobalMethods{
             'exp' => time() + 10000, //in seconds, 1hour
             'data' => [
                 'userID' => $role, // User role
-                'username' => $name
+                'username' => $name,
+                'email' => $email,
+                'password' => $password,
+                'first_name' => $first_name,
+                'last_name' => $last_name,
+                'street_address' => $street_address,
+                'postal_code' => $postal_code,
+                'town_city' => $town_city,
+                'province' => $province,
+                'phone_number' => $phone_number
             ]
 
         );
@@ -40,6 +49,15 @@ class Login extends GlobalMethods{
                 return $this->generateToken(
                     $result['data'][0]['user_ID'],
                     $result['data'][0]['username'],
+                    $result['data'][0]['email'],
+                    $result['data'][0]['password'],
+                    $result['data'][0]['first_name'],
+                    $result['data'][0]['last_name'],
+                    $result['data'][0]['street_address'],
+                    $result['data'][0]['postal_code'],
+                    $result['data'][0]['town_city'],
+                    $result['data'][0]['province'],
+                    $result['data'][0]['phone_number']
                 );
             } else {
                 return array("token" => "", "code" => 403, "message" => "Invalid Password");
